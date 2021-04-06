@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='show_answers.css') }}">
+    <title>{{ question['title'] }}</title>
+{% endblock %}
+
+{% block content %}
+    <h1 class="title">{{ question['title'] }}</h1>
+    <p class="desc">{{ question['message'] }}</p>
+    {% for image in question['image'].strip('\'][\'').split('\', \'') %}
+    <a href="{{ url_for('static', filename="user-upload/"+image) }}">
+        <img src="{{ url_for('static', filename="user-upload/"+image) }}" alt="">
+    </a>
+    {% endfor %}
+    <div class="answers">
+        <h3>Answers:</h3>
+        {% if not answers %}<p>No answers yet!</p>{% endif %}
+        {% for answer in answers %}
+            <div class="answer-block">
+                <table>
+                    <tr>
+                        <td class="sideBar"><a href="/answer/{{ answer['id'] }}/{{ True }}">👍</a></td>
+                        <td class="text"  rowspan="3">
+                                <h3 class="title">{{ answer['message'] }}</h3>
+                                {#<p class="time">{{ question['converted_time'] }} {{ question['view_number'] }} views</p>
+                                <p class="text-container desc">{{ question['message'] }}</p>#}
+                        </td>
+                        {#<td class="sideBar">
+                            #}{#<a class="btn btnUpdate" href="/question/{{ question['id'] }}/edit"><i class="fas fa-edit"></i></a>#}{#
+                        </td>#}
+                        <td class="sideBar">
+                            <a href="/question/{{ question['id'] }}/delete" class="action-container--button btn btnDelete"><i class="far fa-trash-alt"></i></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="sideBar">
+                            <p>{{ answer['vote_number'] }}</p>
+                            <p>votes</p>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="sideBar padding"><a href="/answer/{{ answer['id'] }}/{{ False }}">👎</a></td>
+                        <td></td>
+                    </tr>
+                </table>
+                {#<span class="answer-info" >
+                    <span class="voting-container">
+                        <span class="voting-container__buttons">
+                            <button><a href="/answer/{{ answer['id'] }}/{{ True }}">👍🏻</a></button>
+                            <p>{{ answer['vote_number'] }}</p>
+                            <button><a href="/answer/{{ answer['id'] }}/{{ False }}">👎🏻</a></button>
+                        </span>
+                    </span>
+                </span>
+                <p>votes</p>
+                <span class="">
+                    <p>{{ answer['message'] }}</p>
+                </span>
+                <form action="/answer/{{ answer['id'] }}/delete" method="post">
+                    <button type="submit">Delete</button>
+                </form>#}
+            </div>
+        {% endfor %}
+    </div>
+    <body>
+    {#<a href='/answer/{{ question['id'] }}/new-answer'>#}
+         <a class="btn new" href='/answer/{{ question['id'] }}/new-answer'><i class="fas fa-comment-dots fa-3x"></i></a>
+    {#<a href='/'>
+        <input type="button" value="BACK">
+    </a>#}
+
+    </body>
+
+{% endblock %}

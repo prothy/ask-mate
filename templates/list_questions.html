@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='list_questions.css') }}">
+{% endblock %}
+
+{% block content %}
+    <select class="sort-select" name="sort">
+        <option disabled selected value>Sort by</option>
+        <option value="submission_time">Upload time</option>
+        <option value="view_number">Views</option>
+        <option value="vote_number">Votes</option>
+    </select>
+    <select class="sort-select" name="order">
+        <option disabled selected value>Order by</option>
+        <option value="desc">Descending</option>
+        <option value="asc">Ascending</option>
+    </select>
+    <input id="sort-button" type="button" value="Sort">
+{% for question in questions %}
+    <div class="question-block">
+        <table>
+            <tr>
+                <td class="sideBar"><a href="/question/{{ question['id'] }}/{{ True }}">👍</a></td>
+                <td class="text"  rowspan="3">
+                    <a class="text-container" href="/question/{{ question['id'] }}">
+                        <h3 class="title">{{ question['title'] }}</h3>
+                        <p class="time">{{ question['converted_time'] }} {{ question['view_number'] }} views</p>
+                        <p class="text-container desc">{{ question['message'] }}</p>
+                    </a>
+                </td>
+                <td class="sideBar">
+                    <a class="btn btnUpdate" href="/question/{{ question['id'] }}/edit"><i class="fas fa-edit"></i></a>
+                </td>
+                <td class="sideBar">
+                    <a href="/question/{{ question['id'] }}/delete" class="action-container--button btn btnDelete"><i class="far fa-trash-alt"></i></a>
+                </td>
+            </tr>
+            <tr>
+                <td class="sideBar">
+                    <p>{{ question['vote_number'] }}</p>
+                    <p>votes</p>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="sideBar padding"><a href="/question/{{ question['id'] }}/{{ False }}">👎</a></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+{% endfor %}
+    <a class="btn new" href='/add-question'><i class="fas fa-plus-circle fa-3x"></i></a>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+{% endblock %}

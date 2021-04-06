@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='edit_question.css') }}">
+    <title>Edit question</title>
+{% endblock %}
+
+{% block content %}
+    <h1 class="title">Edit question</h1>
+    <form method="post">
+        <label for="input_title">Title</label>
+        <input class="input title" name="input_title" type="text" placeholder="Title here" value="{{ result['title'] }}">
+        <label for="input_message">Message</label>
+        <textarea class="input" name="input_message" type="text" placeholder="Message here">{{ result['message'] }}</textarea>
+        <button type="submit">Edit</button>
+    </form>
+{% endblock %}

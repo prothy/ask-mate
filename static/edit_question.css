@@ -1,0 +1,27 @@
+form {
+    padding: 0.5em;
+}
+
+form > * {
+    display: block;
+    margin: 0.5em 0;
+}
+
+.input.title {
+    max-width: 40%;
+}
+
+.input {
+    width: 100%;
+
+    padding: 0.5em 1em;
+
+    font: 10pt sans-serif;
+
+    border-radius: 2px;
+    border: 1px solid #ccc;
+}
+
+form > button {
+    margin-top: 1em;
+}

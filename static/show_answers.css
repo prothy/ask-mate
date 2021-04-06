@@ -1,0 +1,42 @@
+.content > .title {
+    margin-bottom: 0.5em;
+}
+
+.content > .desc {
+    color: var(--secondary-text);
+}
+
+.content img {
+    width: 150px;
+    height: auto;
+}
+
+.answers {
+    padding: 2rem 0;
+}
+
+/* "Answers" text */
+.answers > h3 {
+    margin-bottom: 0.5em;
+}
+
+/* container for each answer */
+.answer-block {
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+
+    border: var(--container-border);
+    border-radius: var(--container-border-radius);
+    box-shadow: var(--container-shadow);
+}
+
+.answer-block span {
+    display: block;
+    margin-bottom: 0.4rem;
+}
+
+.answer-info > p {
+    font-size: 9pt;
+    font-weight: bold;
+    color: var(--secondary-text)
+}
