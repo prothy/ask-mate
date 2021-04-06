@@ -1,15 +1,17 @@
-"""
- data_manager.py --> is responsible for formatting data.
-"""
-from connection import read_data, write_data, QUESTION_FILE_PATH, ANSWER_FILE_PATH, QUESTIONS_HEADER, ANSWERS_HEADER
+from psycopg2.extras import RealDictCursor
+
+import database_common
 
 
-def sorting_questions(questions_list, order_by, order_direction):
-    if questions_list[0][order_by].isdigit():
-        sorted_questions = sorted(questions_list, key=lambda k: int(k[order_by]))
-    else:
-        sorted_questions = sorted(questions_list, key=lambda k: k[order_by].lower())
-    return sorted_questions if order_direction == "asc" else sorted_questions[::-1]
+@database_common.connection_handler
+def sorting_questions(cursor: RealDictCursor, order_by, order_direction):
+    query = f"""
+        SELECT *
+        FROM question
+        ORDER BY {order_by} {order_direction}
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
 
 
 def update_question_votes(item_id, vote_action):
