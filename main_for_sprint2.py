@@ -11,6 +11,41 @@ def list_matching():
     #name of template file should be search_result.html
     return render_template('search_result.html', questions=questions_list)
 
+
+
+#TODO: Edit answer page
+
+@app.route('/answer/<answer_id>/edit', methods=['GET', 'POST'])
+def edit_question(answer_id):
+    file = connection.read_data("sample_data/answer.csv")
+    for index in range(len(file)):
+        if file[index]['id'] == answer_id:
+            result = file[index]
+    if request.method == 'GET':
+        #template name: edit_answer.html
+        return render_template('edit_answer.html', result=result)
+    else:
+        unix_time = int(time.time())
+        message = request.form.get('input_message')
+        image = request.form.get('input_image_url')
+        result.update({'submission_time': unix_time, 'message': message, 'image': image}) #are the names of required variables correct?
+        connection.write_data(connection.ANSWER_FILE_PATH, connection.ANSWERS_HEADER, file)
+        return redirect(url_for('list_questions')) #not sure... maybe return somewhere else?
+
+#TODO: Edit comment page
+#TODO: Delete Comment page
+
+@app.route('/comment/<comment_id>/delete', methods=['POST'])
+def delete_comment(comment_id): #is called with comment_id
+    file = connection.read_data("sample_data/comment.csv") #comment.csv
+    for index in range(len(file)):
+        if file[index]['id'] == comment_id:
+            file.pop(index)
+            connection.write_data(connection.COMMENT_FILE_PATH, file) #i'm not sure whether these are the necessary variables, please correct if wrong
+            return redirect(url_for('list_questions'))
+
+#TODO: 'add tag' page
+
 '''
 @app.route('/list', methods=['GET', 'POST'])
 def list_questions():
@@ -23,7 +58,6 @@ def list_questions():
     return render_template('list_questions.html', questions=questions_list)
 '''
 
-#TODO: Edit answer page
 '''
 @app.route('/question/<question_id>', methods=['GET', 'POST'])
 def display_question(question_id):
@@ -42,7 +76,7 @@ def display_question(question_id):
     abort(404)
 '''
 
-#TODO: Edit comment page
+
 '''
 @app.route('/answer/<question_id>/new-answer', methods=['GET', 'POST'])
 def add_answer(question_id):
@@ -69,15 +103,6 @@ def add_answer(question_id):
         return redirect(url_for('list_questions'))
 '''
 
-#TODO: Delete Comment page
-@app.route('/comment/<comment_id>/delete', methods=['POST'])
-def delete_comment(comment_id): #is called with comment_id
-    file = connection.read_data("sample_data/comment.csv") #comment.csv
-    for index in range(len(file)):
-        if file[index]['id'] == comment_id:
-            file.pop(index)
-            connection.write_data(connection.COMMENT_FILE_PATH, file) #i'm not sure whether these are the necessary variables, please correct if wrong
-            return redirect(url_for('list_questions'))
 
 
 '''
@@ -116,7 +141,7 @@ def add_question():
 
 '''
 
-#TODO: 'add tag' page
+
 '''
 @app.route('/question/<question_id>/delete', methods=['POST'])
 def delete_question(question_id):
