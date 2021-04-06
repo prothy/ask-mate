@@ -70,6 +70,16 @@ def add_answer(question_id):
 '''
 
 #TODO: Delete Comment page
+@app.route('/comment/<comment_id>/delete', methods=['POST'])
+def delete_comment(comment_id): #is called with comment_id
+    file = connection.read_data("sample_data/comment.csv") #comment.csv
+    for index in range(len(file)):
+        if file[index]['id'] == comment_id:
+            file.pop(index)
+            connection.write_data(connection.COMMENT_FILE_PATH, file) #i'm not sure whether these are the necessary variables, please correct if wrong
+            return redirect(url_for('list_questions'))
+
+
 '''
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
