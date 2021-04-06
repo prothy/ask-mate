@@ -1,6 +1,5 @@
 from flask import Flask, request, redirect, render_template, url_for, abort
 from werkzeug.utils import secure_filename
-import connection
 import data_manager
 import util
 import time
@@ -10,34 +9,30 @@ UPLOAD_FOLDER = "/static/user-upload"
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
+
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 @app.route('/')
 @app.route('/list')
 def list_questions():
+    """INITIAL: Lists the questions by order"""
     sort = request.args.get("sort") if request.args.get("sort") else "submission_time"
     order = request.args.get("order") if request.args.get("order") else "desc"
-    questions_list = data_manager.sorting_questions(sort, order)
-    for item in questions_list:
-        item["converted_time"] = util.transform_timestamp(item["submission_time"])
+    questions_list = data_manager.sort_questions(sort, order)
     return render_template('list_questions.html', questions=questions_list)
 
 
-@app.route('/question/<question_id>', methods=['GET', 'POST'])
+@app.route('/question/<question_id>')
 def display_question(question_id):
-    """Routes to the specific ID of the selected question with answers"""
-    questions_list = connection.read_data("sample_data/question.csv")
-    answers_list = []
-    for answer in connection.read_data("sample_data/answer.csv"):
-        if answer['question_id'] == question_id:
-            answers_list.append(answer)
+    """Routes to the specific ID of the selected question displaying corresponding answers"""
+    question = data_manager.get_question(question_id)
+    answers_list = data_manager.get_answers_for_question(question_id)
 
-
-    for row in questions_list:
+    for row in questions:
         if row['id'] == question_id:
             data_manager.update_view_count(question_id)
-            return render_template('show_answers.html', question=row, answers=answers_list)
+            return render_template('show_answers.html', question=question, answers=answers_list)
 
     abort(404)
 
