@@ -1,6 +1,15 @@
 #TODO: Search result list page
 @app.route('/search', methods=['GET'])
-#def list_matching():
+def list_matching():
+    temp = connection.read_data("sample_data/question.csv")
+    sort = request.args.get("sort") if request.args.get("sort") else "submission_time"
+    order = request.args.get("order") if request.args.get("order") else "desc"
+    #changed sorting_questions to sorting_searched_questions
+    questions_list = data_manager.sorting_searched_questions(temp, sort, order)
+    for item in questions_list:
+        item["converted_time"] = util.transform_timestamp(item["submission_time"])
+    #name of template file should be search_result.html
+    return render_template('search_result.html', questions=questions_list)
 
 '''
 @app.route('/list', methods=['GET', 'POST'])
