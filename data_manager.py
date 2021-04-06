@@ -4,13 +4,36 @@ import database_common
 
 
 @database_common.connection_handler
-def sorting_questions(cursor: RealDictCursor, order_by, order_direction):
+def sort_questions(cursor: RealDictCursor, order_by, order_direction):
     query = f"""
         SELECT *
         FROM question
         ORDER BY {order_by} {order_direction}
     """
     cursor.execute(query)
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def get_answers_for_question(cursor: RealDictCursor, question_id):
+    query = """
+        SELECT a.*
+        FROM question
+        JOIN answer a on question.id = a.question_id
+        WHERE question.id = (%s)
+        """
+    cursor.execute(query, [question_id])
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def get_question(cursor: RealDictCursor, question_id):
+    query = """
+        SELECT *
+        FROM question
+        WHERE question.id = (%s)
+        """
+    cursor.execute(query, [question_id])
     return cursor.fetchall()
 
 
@@ -50,6 +73,7 @@ def update_answer_votes(item_id, vote_action):
                 line["vote_number"] = vote_count
     write_data(ANSWER_FILE_PATH, ANSWERS_HEADER, file)
     return vote_count
+
 
 def update_view_count(item_id):
     """Updates vote answers: vote_action = True or False"""
