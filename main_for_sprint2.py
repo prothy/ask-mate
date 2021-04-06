@@ -33,6 +33,24 @@ def edit_question(answer_id):
         return redirect(url_for('list_questions')) #not sure... maybe return somewhere else?
 
 #TODO: Edit comment page
+
+@app.route('/comment/<comment_id>/edit', methods=['GET', 'POST'])
+def edit_question(answer_id):
+    file = connection.read_data("sample_data/comment.csv")
+    for index in range(len(file)):
+        if file[index]['id'] == comment_id:
+            result = file[index]
+    if request.method == 'GET':
+        #template name: edit_comment.html
+        return render_template('edit_comment.html', result=result)
+    else:
+        unix_time = int(time.time())
+        message = request.form.get('input_message')
+        image = request.form.get('input_image_url')
+        result.update({'submission_time': unix_time, 'message': message, 'image': image}) #are the names of required variables correct?
+        connection.write_data(connection.COMMENT_FILE_PATH, connection.COMMENTS_HEADER, file)
+        return redirect(url_for('list_questions')) #not sure... maybe return somewhere else?
+
 #TODO: Delete Comment page
 
 @app.route('/comment/<comment_id>/delete', methods=['POST'])
