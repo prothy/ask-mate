@@ -14,12 +14,11 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 @app.route('/')
-@app.route('/list', methods=['GET', 'POST'])
+@app.route('/list')
 def list_questions():
-    temp = connection.read_data("sample_data/question.csv")
     sort = request.args.get("sort") if request.args.get("sort") else "submission_time"
     order = request.args.get("order") if request.args.get("order") else "desc"
-    questions_list = data_manager.sorting_questions(temp, sort, order)
+    questions_list = data_manager.sorting_questions(sort, order)
     for item in questions_list:
         item["converted_time"] = util.transform_timestamp(item["submission_time"])
     return render_template('list_questions.html', questions=questions_list)
