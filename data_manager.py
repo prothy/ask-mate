@@ -36,7 +36,8 @@ def get_question(cursor: RealDictCursor, question_id):
     return cursor.fetchall()
 
 
-def update_question_votes(item_id, vote_action):
+@database_common.connection_handler
+def update_question_votes(cursor: RealDictCursor, question_id, vote_action):
     """Updates vote questions: vote_action = True or False"""
     if vote_action == "vote_up":
         query = f"""
