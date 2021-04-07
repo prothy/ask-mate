@@ -57,7 +57,7 @@ def edit_question(answer_id):
         connection.write_data(connection.COMMENT_FILE_PATH, connection.COMMENTS_HEADER, file)
         return redirect(url_for('/comment/<comment_id>'))
 
-#TODO: Delete Comment page
+#TODO: Delete Comment page -> Didn't refactore it yet
 
 @app.route('/comment/<comment_id>/delete', methods=['POST'])
 def delete_comment(comment_id): #is called with comment_id
@@ -71,8 +71,8 @@ def delete_comment(comment_id): #is called with comment_id
 #TODO: 'add tag' page
 
 @app.route('/tag/<question_id>/add', methods=['GET', 'POST'])
-def add_tag(question_id): #add tag to question
-    file = connection.read_data("sample_data/question.csv") #add tag to question
+def add_tag(question_id): #suppose 'tag' is a column of table 'question'
+    file = connection.read_data("sample_data/question.csv")
 
     for index in range(len(file)):
         if file[index]['id'] == question_id:
@@ -85,7 +85,7 @@ def add_tag(question_id): #add tag to question
         message = request.form.get('input_message')
         image = request.form.get('input_image_url')
         tags = request.form.get('input_tag')
-        #new_question and add_question should be modified (variable for tags)
+        #new_question and add_question should be modified (column for tags)
         result.update({'submission_time': unix_time, 'title': title, 'message': message, 'image': image, 'tags': tags})
         connection.write_data(connection.QUESTION_FILE_PATH, connection.QUESTIONS_HEADER, file)
-        return redirect(url_for('list_questions'))
+        return redirect(url_for('/question/<question_id>'))
