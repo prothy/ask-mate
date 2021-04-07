@@ -19,12 +19,12 @@
 {% for question in questions %}
     <div class="question-block">
         <span class="side-container">
-            <a href="/question/{{ question.id }}/{{ True }}">👍</a>
+            <a href="/question/{{ question.id }}/vote_up">👍</a>
             <span>
                 <h5>{{ question.vote_number }}</h5>
                 <h6>votes</h6>
             </span>
-            <a href="/question/{{ question['id'] }}/{{ False }}">👎</a>
+            <a href="/question/{{ question['id'] }}/vote_down">👎</a>
         </span>
         <span class="text-container">
             <h3 class="text-container title">

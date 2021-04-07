@@ -16,11 +16,10 @@ def sort_questions(cursor: RealDictCursor, order_by, order_direction):
 
 @database_common.connection_handler
 def get_answers_for_question(cursor: RealDictCursor, question_id):
-    query = """
-        SELECT a.*
-        FROM question
-        JOIN answer a on question.id = a.question_id
-        WHERE question.id = (%s)
+    query = f"""
+        SELECT *
+        FROM answer
+        WHERE question_id = {question_id}
         """
     cursor.execute(query, [question_id])
     return cursor.fetchall()
@@ -31,7 +30,7 @@ def get_question(cursor: RealDictCursor, question_id):
     query = """
         SELECT *
         FROM question
-        WHERE question.id = (%s)
+        WHERE id = {question_id}
         """
     cursor.execute(query, [question_id])
     return cursor.fetchall()
@@ -39,21 +38,39 @@ def get_question(cursor: RealDictCursor, question_id):
 
 def update_question_votes(item_id, vote_action):
     """Updates vote questions: vote_action = True or False"""
-    file = read_data(QUESTION_FILE_PATH)
-    # Initiate vote_count variable to be returned
-    vote_count = None
-    for line in file:
-        if line["id"] == item_id:
-            # Upvote:
-            if vote_action == "True":
-                vote_count = int(line.get("vote_number", 0)) + 1
-                line["vote_number"] = vote_count
-            # Downvote:
-            elif vote_action == "False":
-                vote_count = int(line.get("vote_number", 0)) - 1
-                line["vote_number"] = vote_count
-    write_data(QUESTION_FILE_PATH, QUESTIONS_HEADER, file)
-    return vote_count
+    if vote_action == "vote_up":
+        query = f"""
+            UPDATE question 
+            SET vote_number = vote_number + 1 
+            WHERE
+                id = {question_id}
+        """
+    else:
+        query = f"""
+            UPDATE question 
+            SET vote_number = vote_number - 1 
+            WHERE
+                id = {question_id}
+            """
+
+    cursor.execute(query)
+    #
+    # file = read_data(QUESTION_FILE_PATH)
+    # # Initiate vote_count variable to be returned
+    # vote_count = None
+    # for line in file:
+    #     if line["id"] == item_id:
+    #         # Upvote:
+    #         if vote_action == "True":
+    #             vote_count = int(line.get("vote_number", 0)) + 1
+    #             line["vote_number"] = vote_count
+    #         # Downvote:
+    #         elif vote_action == "False":
+    #             vote_count = int(line.get("vote_number", 0)) - 1
+    #             line["vote_number"] = vote_count
+    # write_data(QUESTION_FILE_PATH, QUESTIONS_HEADER, file)
+    # return vote_count
+
 
 
 def update_answer_votes(item_id, vote_action):
