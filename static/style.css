@@ -22,13 +22,10 @@ a {
     text-decoration: none;
 }
 
+/* HEADER */
 .outer-container {
     margin: 0 auto;
     max-width: 1200px;
-}
-
-a:hover h3 {
-    text-decoration: underline;
 }
 
 header {
@@ -41,6 +38,27 @@ header {
 
 header h1 {
     outline: none;
+}
+
+header h1:hover {
+    text-decoration: underline;
+}
+
+header .outer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header .outer-container input {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+}
+
+header .outer-container input[type="text"] {
+    width: 35rem;
+    border: 1px solid #888;
+    border-radius: 2px;
 }
 
 .content {
@@ -87,24 +105,6 @@ header h1 {
 .btnUpdate:hover {
     background: #88c9f3;
     text-decoration: none;
-}
-
-/*table css*/
-.question-block table {
-    border-collapse: collapse;
-    bottom: 0;
-}
-
-.text {
-    height: 10rem;
-    width: 100rem;
-    padding: 10px;
-}
-
-.sideBar {
-    width: 5rem;
-    text-align: center;
-    padding: 10px 0;
 }
 
 /*add new something*/
