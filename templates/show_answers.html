@@ -5,13 +5,13 @@
 {% endblock %}
 
 {% block content %}
-    <h1 class="title">{{ question['title'] }}</h1>
-    <p class="desc">{{ question['message'] }}</p>
-    {% for image in question['image'].strip('\'][\'').split('\', \'') %}
+    <h1 class="title">{{ question.title }}</h1>
+    <p class="desc">{{ question.message }}</p>
+    {#{% for image in question['image'].strip('\'][\'').split('\', \'') %}
     <a href="{{ url_for('static', filename="user-upload/"+image) }}">
         <img src="{{ url_for('static', filename="user-upload/"+image) }}" alt="">
     </a>
-    {% endfor %}
+    {% endfor %}#}
     <div class="answers">
         <h3>Answers:</h3>
         {% if not answers %}<p>No answers yet!</p>{% endif %}
