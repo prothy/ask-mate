@@ -52,9 +52,10 @@ def edit_question(answer_id):
         unix_time = int(time.time())
         message = request.form.get('input_message')
         image = request.form.get('input_image_url')
-        result.update({'submission_time': unix_time, 'message': message, 'image': image}) #are the names of required variables correct?
+        # suppose the columns of comment table are: id, message, image
+        result.update({'submission_time': unix_time, 'message': message, 'image': image})
         connection.write_data(connection.COMMENT_FILE_PATH, connection.COMMENTS_HEADER, file)
-        return redirect(url_for('list_questions')) #not sure... maybe return somewhere else?
+        return redirect(url_for('/comment/<comment_id>'))
 
 #TODO: Delete Comment page
 
