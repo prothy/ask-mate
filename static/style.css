@@ -9,6 +9,9 @@
     --container-border-radius: 2px;
     --container-shadow: 0 2px 4px #eee;
 
+    --div-bg: #faffff;
+    --accent-color: #dfdfdf;
+
     font-family: 'Roboto', sans-serif;
     color: var(--primary-text);
 }
@@ -17,6 +20,11 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background: radial-gradient(ellipse at center bottom, #fffbe8, #fff5f0, #f0ffff);
 }
 
 a {
@@ -28,13 +36,13 @@ a, p {
     font-weight: lighter;
 }
 
-input {
+input, select {
+    border: 1px solid var(--accent-color);
     border-radius: 2px;
 }
 
 input[type="submit"], input[type="button"] {
     background: #f9f9f9;
-    border: 1px solid #aaa;
 }
 
 /* HEADER */
@@ -46,7 +54,7 @@ input[type="submit"], input[type="button"] {
 header {
     padding: 1rem 0;
 
-    background: linear-gradient(0deg, #e8e8e8 0%, #f7f7f7 50%, #fff 100%);
+    background: var(--div-bg);
     border-bottom: 1px solid #ccc;
 
 }

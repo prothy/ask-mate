@@ -4,6 +4,7 @@
     grid-template-areas:
             "side . info"
             "side . text";
+    grid-template-rows: 1.5rem auto;
     grid-template-columns: 4rem 1rem auto;
 
     padding: 1rem;
@@ -11,9 +12,9 @@
     width: 100%;
     height: 10rem;
 
-    background: #f9f9f9;
+    background: var(--div-bg);
 
-    --border: 1px solid #dfdfdf;
+    --border: 1px solid var(--accent-color);
     border: var(--border);
     border-top: none;
 }
@@ -60,4 +61,12 @@
     text-align: center;
 }
 
+/* container that contains info */
+.info-container {
+    grid-area: info;
+    display: flex;
+    align-items: center;
+
+    color: var(--secondary-text);
+}
 
