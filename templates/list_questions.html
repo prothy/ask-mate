@@ -18,7 +18,23 @@
     <input id="sort-button" type="button" value="Sort">
 {% for question in questions %}
     <div class="question-block">
-        <table>
+        <span class="side-container">
+            <a href="/question/{{ question.id }}/{{ True }}">👍</a>
+            <span>
+                <h5>{{ question.vote_number }}</h5>
+                <h6>votes</h6>
+            </span>
+            <a href="/question/{{ question['id'] }}/{{ False }}">👎</a>
+        </span>
+        <span class="text-container">
+            <h3 class="text-container title">
+                {{ question.title }}
+            </h3>
+            <p class="text-container message">
+                {{ question.message }}
+            </p>
+        </span>
+        {#<table>
             <tr>
                 <td class="sideBar"><a href="/question/{{ question['id'] }}/{{ True }}">👍</a></td>
                 <td class="text"  rowspan="3">
@@ -46,7 +62,7 @@
                 <td class="sideBar padding"><a href="/question/{{ question['id'] }}/{{ False }}">👎</a></td>
                 <td></td>
             </tr>
-        </table>
+        </table>#}
     </div>
 {% endfor %}
     <a class="btn new" href='/add-question'><i class="fas fa-plus-circle fa-3x"></i></a>
