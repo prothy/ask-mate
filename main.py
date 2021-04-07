@@ -134,7 +134,7 @@ def delete_answer(answer_id):
 @app.route('/question/<question_id>/<action>')
 # <action>: 'vote_up' or 'vote_down'
 def vote_question(question_id, action):
-    data_manager.update_question_votes(question_id, action)
+    data_manager.update_votes("question", question_id, action)
     return redirect(request.referrer)
 
 
@@ -142,7 +142,7 @@ def vote_question(question_id, action):
 @app.route('/answer/<answer_id>/<action>')
 # <action>: 'vote_up' or 'vote_down'
 def vote_answer(answer_id, action):
-    data_manager.update_answer_votes(answer_id, action)
+    data_manager.update_votes("answer", answer_id, action)
     return redirect(request.referrer)
 
 
