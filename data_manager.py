@@ -29,7 +29,7 @@ def get_answers_for_question(cursor: RealDictCursor, question_id):
 
 @database_common.connection_handler
 def get_question(cursor: RealDictCursor, question_id):
-    """Lists all the questions """
+    """Lists all the questions by the ID"""
     query = f"""
         SELECT *
         FROM question
@@ -54,8 +54,8 @@ def update_votes(cursor: RealDictCursor, vote_type: str, item_id, vote_action: s
         SET vote_number = {calc_votes} 
         WHERE id = {item_id}
     """
-
     cursor.execute(query)
+
 
 @database_common.connection_handler
 def update_view_count(cursor: RealDictCursor, question_id):
