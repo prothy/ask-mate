@@ -1,9 +1,13 @@
 .question-block {
-    display: flex;
-    align-content: space-between;
+    display: grid;
+
+    grid-template-areas:
+            "side . info"
+            "side . text";
+    grid-template-columns: 4rem 1rem auto;
 
     margin: 1em 0;
-    padding: 1em;
+    padding: 1rem;
 
     width: 100%;
     height: 10rem;
@@ -11,11 +15,6 @@
     border: var(--container-border);
     border-radius: var(--container-border-radius);
     box-shadow: var(--container-shadow);
-}
-
-.question-block > * {
-    display: flex;
-    flex-direction: column;
 }
 
 /* vote and view count block */
@@ -59,6 +58,10 @@
 }
 
 /* question and description block */
+.text-container {
+    grid-area: text;
+}
+
 .text-container .time {
     font-size: 9pt;
     font-weight: bold;
@@ -88,6 +91,10 @@
 
 /* container that contains vote buttons */
 .side-container {
+    display: flex;
+    flex-direction: column;
+    grid-area: side;
+
     justify-content: space-evenly;
     align-items: center;
 }
