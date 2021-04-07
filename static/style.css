@@ -1,3 +1,5 @@
+@import "fonts.css";
+
 :root {
     --primary-text: #222;
     --secondary-text: #777;
@@ -7,7 +9,7 @@
     --container-border-radius: 2px;
     --container-shadow: 0 2px 4px #eee;
 
-    font-family: sans-serif;
+    font-family: 'Roboto', sans-serif;
     color: var(--primary-text);
 }
 
@@ -22,6 +24,19 @@ a {
     text-decoration: none;
 }
 
+a, p {
+    font-weight: lighter;
+}
+
+input {
+    border-radius: 2px;
+}
+
+input[type="submit"], input[type="button"] {
+    background: #f9f9f9;
+    border: 1px solid #aaa;
+}
+
 /* HEADER */
 .outer-container {
     margin: 0 auto;
@@ -31,7 +46,7 @@ a {
 header {
     padding: 1rem 0;
 
-    background: linear-gradient(0deg, #d7d7d7 0%, #ededed 50%, #f0f0f0 100%);
+    background: linear-gradient(0deg, #e8e8e8 0%, #f7f7f7 50%, #fff 100%);
     border-bottom: 1px solid #ccc;
 
 }
@@ -66,8 +81,13 @@ header input[type="text"] {
     margin-top: 3rem;
 }
 
+.content select:first-of-type {
+    margin-left: 0.5rem;
+}
+
 .content select, .content input {
     height: 2rem;
+    padding: 0 0.5rem;
 }
 
 .btn {
