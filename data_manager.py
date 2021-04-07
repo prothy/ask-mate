@@ -1,7 +1,7 @@
 from psycopg2.extras import RealDictCursor
 
 import database_common
-
+import datetime
 
 @database_common.connection_handler
 def sort_questions(cursor: RealDictCursor, order_by, order_direction):
@@ -64,5 +64,15 @@ def update_view_count(cursor: RealDictCursor, question_id):
         UPDATE question
         SET view_number = view_number + 1
         WHERE id = {question_id}
+    """
+    cursor.execute(query)
+
+
+@database_common.connection_handler
+def add_answer(cursor: RealDictCursor, values):
+    submission_time = datetime.datetime.now().isoformat(' ', 'seconds')
+    query = f"""
+        INSERT INTO answer(submission_time, vote_number, question_id, message, image)
+        VALUES ('{submission_time}', 0, {values['question_id']}, '{values['message']}', '{values['image']}')
     """
     cursor.execute(query)
