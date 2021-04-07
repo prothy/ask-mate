@@ -31,7 +31,7 @@ a {
 header {
     padding: 1rem 0;
 
-    background: #f7f7f7;
+    background: linear-gradient(0deg, #d7d7d7 0%, #ededed 50%, #f0f0f0 100%);
     border-bottom: 1px solid #ccc;
 
 }
@@ -50,12 +50,13 @@ header .outer-container {
     align-items: center;
 }
 
-header .outer-container input {
+header input {
+    height: 2rem;
     font-size: 1rem;
-    padding: 0.5rem 1rem;
+    padding: 0 0.5rem;
 }
 
-header .outer-container input[type="text"] {
+header input[type="text"] {
     width: 35rem;
     border: 1px solid #888;
     border-radius: 2px;
@@ -63,6 +64,10 @@ header .outer-container input[type="text"] {
 
 .content {
     margin-top: 3rem;
+}
+
+.content select, .content input {
+    height: 2rem;
 }
 
 .btn {
