@@ -1,7 +1,6 @@
 from flask import Flask, request, redirect, render_template, url_for, abort
 from werkzeug.utils import secure_filename
 import data_manager
-import util
 import time
 import os
 
