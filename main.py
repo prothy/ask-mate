@@ -29,7 +29,7 @@ def display_question(question_id):
     question = data_manager.get_question(question_id)[0]
     answers_list = data_manager.get_answers_for_question(question_id)
 
-    # data_manager.update_view_count(question_id)
+    data_manager.update_view_count(question_id)
 
     return render_template('show_answers.html', question=question, answers=answers_list)
 
