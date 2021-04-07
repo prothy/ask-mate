@@ -50,14 +50,9 @@ def add_answer(question_id):
 
 @app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
-    file = connection.read_data("sample_data/question.csv")
     if request.method == 'GET':
         return render_template('ask_question.html')
     else:
-        id = util.create_id(file)
-        unix_time = int(time.time())
-        view_number = 0
-        vote_number = 0
         title = request.form.get('input_title')
         message = request.form.get('input_message')
 
@@ -68,20 +63,17 @@ def add_question():
             image.save(os.path.join("static/user-upload", f))
             image_list.append(f)
 
-        file.append(
-            {'id': id,
-             'submission_time': unix_time,
-             'view_number': view_number,
-             'vote_number': vote_number,
-             'title': title,
-             'message': message,
-             'image': image_list
-             }
+        data_manager.add_question(
+            {
+                'title': title,
+                'message': message,
+                'image': image_list
+            }
         )
-        connection.write_data(connection.QUESTION_FILE_PATH, connection.QUESTIONS_HEADER, file)
         return redirect(url_for('list_questions'))
 
 
+# TODO: delete_question - Needs to be refactored + SQL query
 @app.route('/question/<question_id>/delete', methods=['POST'])
 def delete_question(question_id):
     file = connection.read_data("sample_data/question.csv")
@@ -92,6 +84,7 @@ def delete_question(question_id):
             return redirect(url_for('list_questions'))
 
 
+# TODO: edit_question - Needs to be refactored + SQL query
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
 def edit_question(question_id):
     file = connection.read_data("sample_data/question.csv")
@@ -110,6 +103,7 @@ def edit_question(question_id):
         return redirect(url_for('list_questions'))
 
 
+# TODO: delete_answer - Needs to be refactored + SQL query
 @app.route('/answer/<answer_id>/delete', methods=['POST'])
 def delete_answer(answer_id):
     file = connection.read_data(connection.ANSWER_FILE_PATH)
