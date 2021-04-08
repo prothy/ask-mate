@@ -86,3 +86,32 @@ def add_question(cursor: RealDictCursor, values):
         VALUES ('{submission_time}', 0, 0, '{values['title']}', '{values['message']}', '{values['image']}')
     """
     cursor.execute(query)
+
+
+@database_common.connection_handler
+def delete_question(cursor: RealDictCursor, question_id):
+    query = f"""
+        DELETE FROM question
+        WHERE id = {question_id}
+    """
+    cursor.execute(query)
+
+
+@database_common.connection_handler
+def delete_answer(cursor: RealDictCursor, answer_id):
+    query = f"""
+            DELETE FROM answer
+            WHERE id = {answer_id}
+        """
+    cursor.execute(query)
+
+
+@database_common.connection_handler
+def update_table(cursor: RealDictCursor, table_name, table_element_id, values):
+    query = f"""
+            UPDATE {table_name}
+            SET title, message
+            VALUES '{values["title"]}', '{values["message"]}'
+            WHERE id = {table_element_id}            
+        """
+    cursor.execute(query)
