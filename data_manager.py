@@ -122,3 +122,36 @@ def update_table(cursor: RealDictCursor, table_name, table_element_id, values):
             WHERE id = {table_element_id}            
         """
     cursor.execute(query)
+
+
+def search_table(search_query: str):
+    """Searches questions and answers for string, returns a list of results in each"""
+    question_results = search_questions(search_query)
+    answer_results = search_answers(search_query)
+
+    return question_results, answer_results
+
+
+@database_common.connection_handler
+def search_questions(cursor: RealDictCursor, search_query: str):
+    query = f"""
+        SELECT *
+        FROM question
+        WHERE (title LIKE '%{search_query}%')
+        OR (message LIKE '%{search_query}%')
+        """
+
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def search_answers(cursor: RealDictCursor, search_query: str):
+    query = f"""
+            SELECT *
+            FROM answer
+            WHERE message LIKE '%{search_query}%'
+            """
+
+    cursor.execute(query)
+    return cursor.fetchall()
