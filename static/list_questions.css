@@ -36,6 +36,7 @@
 /* question and description block */
 .text-container {
     grid-area: text;
+    margin-top: 0.1rem;
 }
 
 .text-container .time {
@@ -51,7 +52,9 @@
     overflow: hidden;
     height: 100%;
     max-height: 4.5em;
+
     margin: 0.5em 0;
+    padding: 0 0.1rem;
 
     color: var(--tertiary-text);
 }
@@ -76,6 +79,14 @@
     display: flex;
     align-items: center;
 
+    padding: 0 0.1rem;
+
     color: var(--secondary-text);
+}
+
+.info-container > h6 {
+    display: inline-block;
+    margin-right: 1em;
+    font-weight: normal;
 }
 

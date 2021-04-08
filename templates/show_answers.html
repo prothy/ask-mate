@@ -1,12 +1,15 @@
 {% extends "base.html" %}
 {% block head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='show_answers.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='list_questions.css') }}">
     <title>{{ question['title'] }}</title>
 {% endblock %}
 
 {% block content %}
-    <h1 class="title">{{ question.title }}</h1>
-    <p class="desc">{{ question.message }}</p>
+    <div class="top-question">
+        <h1 class="title">{{ question.title }}</h1>
+        <p class="desc">{{ question.message }}</p>
+    </div>
     {#{% for image in question['image'].strip('\'][\'').split('\', \'') %}
     <a href="{{ url_for('static', filename="user-upload/"+image) }}">
         <img src="{{ url_for('static', filename="user-upload/"+image) }}" alt="">
@@ -16,34 +19,23 @@
         <h3>Answers:</h3>
         {% if not answers %}<p>No answers yet!</p>{% endif %}
         {% for answer in answers %}
-            <div class="answer-block">
-                <table>
-                    <tr>
-                        <td class="sideBar"><a href="/answer/{{ answer['id'] }}/{{ True }}">👍</a></td>
-                        <td class="text"  rowspan="3">
-                                <h3 class="title">{{ answer['message'] }}</h3>
-                                {#<p class="time">{{ question['converted_time'] }} {{ question['view_number'] }} views</p>
-                                <p class="text-container desc">{{ question['message'] }}</p>#}
-                        </td>
-                        {#<td class="sideBar">
-                            #}{#<a class="btn btnUpdate" href="/question/{{ question['id'] }}/edit"><i class="fas fa-edit"></i></a>#}{#
-                        </td>#}
-                        <td class="sideBar">
-                            <a href="/question/{{ question['id'] }}/delete" class="action-container--button btn btnDelete"><i class="far fa-trash-alt"></i></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="sideBar">
-                            <p>{{ answer['vote_number'] }}</p>
-                            <p>votes</p>
-                        </td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td class="sideBar padding"><a href="/answer/{{ answer['id'] }}/{{ False }}">👎</a></td>
-                        <td></td>
-                    </tr>
-                </table>
+            <div class="question-block">
+                <span class="side-container">
+                    <a href="/question/{{ answer.id }}/vote_up">👍</a>
+                    <span>
+                        <h5>{{ answer.vote_number }}</h5>
+                        <h6>votes</h6>
+                    </span>
+                    <a href="/question/{{ answer.id }}/vote_down">👎</a>
+                </span>
+                <span class="info-container">
+                    <h6>{{ answer.submission_time }}</h6>
+                </span>
+                <span class="text-container">
+                    <p class="text-container message">
+                        {{ answer.message }}
+                    </p>
+                </span>
                 {#<span class="answer-info" >
                     <span class="voting-container">
                         <span class="voting-container__buttons">

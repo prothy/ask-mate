@@ -86,7 +86,7 @@ def delete_answer(answer_id):
 
 @app.route('/<edit_type>/<question_id>/edit', methods=['GET', 'POST'])
 def edit_question(edit_type, question_id):
-    result = data_manager.get_table_data(edit_type, question_id)
+    result = data_manager.get_table_data(edit_type, question_id)[0]
 
     if request.method == 'GET':
         return render_template('edit_question.html', result=result)

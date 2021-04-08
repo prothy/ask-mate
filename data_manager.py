@@ -3,6 +3,7 @@ from psycopg2.extras import RealDictCursor
 import database_common
 import datetime
 
+
 @database_common.connection_handler
 def sort_questions(cursor: RealDictCursor, order_by, order_direction):
     """Sorts questions by the given criteria, defaults to submission time"""
