@@ -41,8 +41,8 @@ input, select {
     border-radius: 2px;
 }
 
-input[type="submit"], input[type="button"] {
-    background: #f9f9f9;
+input[type="file"] {
+    padding-top: 4px !important;
 }
 
 /* HEADER */
@@ -86,7 +86,7 @@ header input[type="text"] {
 }
 
 .content {
-    margin-top: 3rem;
+    margin-top: 1rem;
     margin-bottom: 3rem;
 }
 
@@ -101,28 +101,44 @@ header input[type="text"] {
 
 .btn {
     font-size: 0.8rem;
-    padding: 11px 20px;
+    padding: 8px;
     text-decoration: none;
-    border: none;
     outline: none;
     cursor: pointer;
     font-weight: bold;
-    border-radius: 15px;
-    margin-top: 10px;
+    border-radius: 3px;
+    border: 0.5px solid #999999;
+    background-color: #f9f9f9;
+    color: var(--primary-text);
+}
+
+.btn:hover {
+    background-color: #e5e3e3;
 }
 
 .btnDelete {
-     background: #ffc4c4;
-    -webkit-border-radius: 15;
-    -moz-border-radius: 15;
-    border-radius: 15px;
+    background: #ffc4c4;
     font-family: Arial;
-    color: #ff0000;
+    color: #ae4747;
+    border: 0.5px solid #ae4747;
+
+}
+
+.btnEdit {
+    background: #d4ffc4;
+    font-family: Arial;
+    color: #64984d;
+        border: 0.5px solid #64984d;
 
 }
 
 .btnDelete:hover {
   background: #f7b4b4;
+  text-decoration: none;
+}
+
+.btnEdit:hover {
+  background: #c9efbc;
   text-decoration: none;
 }
 
@@ -143,19 +159,17 @@ header input[type="text"] {
 
 /*add new something*/
 .new {
-    background: #f5e699;
-    color: #000000;
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    opacity: 0.5;
-    font-size: 0.8rem;
-    font-weight: bold;
-    padding: 4px;
-    border-radius: 100%;
+    border: 1px solid var(--accent-color);
 }
 
 .new:hover {
     opacity: 1;
-    background: #f1da8c;
+}
+
+.top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0;
+    margin-bottom: 10px;
 }

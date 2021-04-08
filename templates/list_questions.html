@@ -4,27 +4,34 @@
 {% endblock %}
 
 {% block content %}
-    <select class="sort-select" name="sort">
-        <option disabled selected value>Sort by</option>
-        <option value="submission_time">Upload time</option>
-        <option value="view_number">Views</option>
-        <option value="vote_number">Votes</option>
-    </select>
-    <select class="sort-select" name="order">
-        <option disabled selected value>Order by</option>
-        <option value="desc">Descending</option>
-        <option value="asc">Ascending</option>
-    </select>
-    <input id="sort-button" type="button" value="Sort">
+    <div class="top-bar">
+        <div>
+            <select class="sort-select" name="sort">
+                <option disabled selected value>Sort by</option>
+                <option value="submission_time">Upload time</option>
+                <option value="view_number">Views</option>
+                <option value="vote_number">Votes</option>
+            </select>
+            <select class="sort-select" name="order">
+                <option disabled selected value>Order by</option>
+                <option value="desc">Descending</option>
+                <option value="asc">Ascending</option>
+            </select>
+            <input id="sort-button" type="button" value="SORT" class="btn">
+        </div>
+
+        <a class="btn new" href='/add-question'><i class="fas fa-plus"></i> ASK QUESTION</a>
+    </div>
+
 {% for question in questions %}
     <div class="question-block">
         <span class="side-container">
-            <a href="/question/{{ question.id }}/vote_up">👍</a>
+            <a href="/question/{{ question.id }}/vote_up"><i class="fas fa-thumbs-up"></i></a>
             <span>
                 <h5>{{ question.vote_number }}</h5>
                 <h6>votes</h6>
             </span>
-            <a href="/question/{{ question.id }}/vote_down">👎</a>
+            <a href="/question/{{ question.id }}/vote_down"><i class="fas fa-thumbs-down"></i></a>
         </span>
         <span class="info-container">
             <span>
@@ -33,7 +40,7 @@
                 <h6>{{ question.submission_time }}</h6>
             </span>
             <span>
-                <a href="/question/{{ question.id }}/edit">Edit</a>
+                <a href="/question/{{ question.id }}/edit" class="action-container--button btn btnEdit"><i class="fas fa-pencil-alt"></i></a>
                 <a href="/question/{{ question.id }}/delete" class="action-container--button btn btnDelete"><i class="far fa-trash-alt"></i></a>
             </span>
         </span>
@@ -47,6 +54,5 @@
         </a>
     </div>
 {% endfor %}
-    <a class="btn new" href='/add-question'><i class="fas fa-plus-circle fa-3x"></i></a>
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 {% endblock %}

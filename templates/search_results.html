@@ -20,7 +20,8 @@
             </span>
             <span class="text-container">
                 <h3>{{ question.title }}</h3>
-                <p>{{ question.message }}</p>
+{#                <p>{{ question.message }}</p>#}
+                {{ question.message | safe }}
             </span>
         </a>
     {% endfor %}
@@ -41,7 +42,7 @@
                 {% endfor %}
             </span>
             <span class="text-container">
-                <p>{{ answer.message }}</p>
+                {{ answer.message | safe }}
             </span>
         </a>
     {% endfor %}

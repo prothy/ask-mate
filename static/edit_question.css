@@ -1,5 +1,4 @@
 .content form {
-    padding: 0.5em;
 }
 
 .content form > * {
@@ -24,4 +23,5 @@
 
 form > button {
     margin-top: 1em;
+
 }

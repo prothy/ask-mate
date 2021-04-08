@@ -1,3 +1,7 @@
+h2 {
+    margin-bottom: 10px;
+}
+
 .question-block {
     grid-template-areas:
             ". info"
@@ -13,4 +17,9 @@
 .info-container h5:first-of-type {
     margin-right: 0;
     font-weight: normal;
+}
+
+/* Highlights search term */
+.search-query {
+    background-color: #ffc4c4;
 }

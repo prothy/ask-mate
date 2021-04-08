@@ -1,9 +1,11 @@
-.content {
-    background: var(--div-bg);
-    border: 1px solid var(--accent-color);
-    padding: 1rem;
-    paddin-bottom: 0;
-    margin-bottom: -1px;
+.question-block--top {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.question-block--top > h1 {
+    margin-bottom: 20px;
 }
 
 .content > .title {
