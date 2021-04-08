@@ -115,12 +115,18 @@ def delete_answer(cursor: RealDictCursor, answer_id):
 
 @database_common.connection_handler
 def update_table(cursor: RealDictCursor, table_name, table_element_id, values):
-    query = f"""
-            UPDATE {table_name}
-            SET title, message
-            VALUES '{values["title"]}', '{values["message"]}'
-            WHERE id = {table_element_id}            
-        """
+    if table_name == "question":
+        query = f"""
+                UPDATE {table_name}
+                SET title = '{values["title"]}', message = '{values["message"]}'
+                WHERE id = {table_element_id}            
+            """
+    else:
+        query = f"""
+                UPDATE {table_name}
+                SET message = '{values["message"]}'
+                WHERE id = {table_element_id}            
+            """
     cursor.execute(query)
 
 
