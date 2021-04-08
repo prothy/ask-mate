@@ -28,12 +28,12 @@ def get_answers_for_question(cursor: RealDictCursor, question_id):
 
 
 @database_common.connection_handler
-def get_question(cursor: RealDictCursor, question_id):
+def get_table_data(cursor: RealDictCursor, table_name, table_element_id):
     """Lists all the questions by the ID"""
     query = f"""
         SELECT *
-        FROM question
-        WHERE id = {question_id}
+        FROM {table_name}
+        WHERE id = {table_element_id}
         """
     cursor.execute(query)
     return cursor.fetchall()
