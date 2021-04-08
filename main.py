@@ -61,6 +61,7 @@ def add_question():
         for image in images:
             if image.filename != "":
                 f = os.path.join(UPLOAD_FOLDER, secure_filename(image.filename))
+                image.save(f)
                 data_manager.add_question(
                     {
                         'title': title,
