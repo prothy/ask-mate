@@ -102,17 +102,15 @@ def edit_question(edit_type, question_id):
         return redirect(request.referrer)
 
 
-@app.route('/question/<question_id>/<action>')
-# <action>: 'vote_up' or 'vote_down'
-def vote_question(question_id, action):
-    data_manager.update_votes("question", question_id, action)
+@app.route('/<vote_type>/<item_id>/vote_up')
+def vote_up(vote_type, item_id):
+    data_manager.update_votes(vote_type, item_id, "vote_up")
     return redirect(request.referrer)
 
 
-@app.route('/answer/<answer_id>/<action>')
-# <action>: 'vote_up' or 'vote_down'
-def vote_answer(answer_id, action):
-    data_manager.update_votes("answer", answer_id, action)
+@app.route('/<vote_type>/<item_id>/vote_down')
+def vote_down(vote_type, item_id):
+    data_manager.update_votes(vote_type, item_id, "vote_down")
     return redirect(request.referrer)
 
 
