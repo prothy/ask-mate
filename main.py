@@ -3,12 +3,14 @@ from werkzeug.utils import secure_filename
 import data_manager
 import os
 
-UPLOAD_FOLDER = "/static/user-upload"
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+UPLOAD_FOLDER = "static/user-upload"
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
 
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+# Evaluate UPLOAD_FOLDER relative to the current Flask App's execution directory
+app.config['UPLOAD_FOLDER'] = os.path.join(APP_ROOT, UPLOAD_FOLDER)
 
 
 @app.route('/')
@@ -44,7 +46,7 @@ def add_answer(question_id):
                 'image': picture
              }
         )
-        return redirect(url_for('list_questions'))
+        return redirect(url_for("display_question", question_id=question_id))
 
 
 @app.route('/add-question', methods=['GET', 'POST'])
@@ -56,19 +58,23 @@ def add_question():
         message = request.form.get('input_message')
 
         images = request.files.getlist('input_image')
-        image_list = []
         for image in images:
-            f = image.filename
-            image.save(os.path.join("static/user-upload", f))
-            image_list.append(f)
-
-        data_manager.add_question(
-            {
-                'title': title,
-                'message': message,
-                'image': image_list
-            }
-        )
+            if image.filename != "":
+                f = os.path.join(UPLOAD_FOLDER, secure_filename(image.filename))
+                data_manager.add_question(
+                    {
+                        'title': title,
+                        'message': message,
+                        'image': f
+                    }
+                )
+            else:
+                data_manager.add_question(
+                    {
+                        'title': title,
+                        'message': message
+                    }
+                )
         return redirect(url_for('list_questions'))
 
 
