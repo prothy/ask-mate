@@ -1,24 +1,48 @@
 {% extends "base.html" %}
 {% block head %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='search_results.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='list_questions.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='search_results.css') }}">
     <title>Search results</title>
 {% endblock %}
 
 {% block content %}
-    <h3>Questions:</h3>
+    <h2>Search results:</h2>
     {% for question in questions %}
-        <div class="question-block">
+        <a href="/question/{{ question.id }}" class="question-block">
+            <span class="info-container">
+                <span>
+                    <h6>{{ question.vote_number }} votes</h6>
+                    <h6 style="font-weight: bold;">·</h6>
+                    <h6>{{ question.view_number }} views</h6>
+                    <h6 style="font-weight: bold;">·</h6>
+                    <h6>{{ question.submission_time }}</h6>
+                </span>
+            </span>
             <span class="text-container">
                 <h3>{{ question.title }}</h3>
                 <p>{{ question.message }}</p>
             </span>
-        </div>
+        </a>
     {% endfor %}
-    <h3>Answers:</h3>
     {% for answer in answers %}
-        <div class="question-block">
-            <p>{{ answer.message }}</p>
-        </div>
+        <a href="/question/{{ answer.question_id }}" class="question-block">
+            <span class="info-container">
+                {% for question in questions %}
+                    {% if question.id == answer.question_id %}
+                        <span>
+                            <h5>Answered in </h5>
+                            <h5>{{ question.title }}</h5>
+                            <h6 style="font-weight: bold;">·</h6>
+                            <h6>{{ answer.vote_number }} votes</h6>
+                            <h6 style="font-weight: bold;">·</h6>
+                            <h6>{{ answer.submission_time }}</h6>
+                        </span>
+                    {% endif %}
+                {% endfor %}
+            </span>
+            <span class="text-container">
+                <p>{{ answer.message }}</p>
+            </span>
+        </a>
     {% endfor %}
 {% endblock %}

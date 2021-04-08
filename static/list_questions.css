@@ -85,9 +85,12 @@
     color: var(--secondary-text);
 }
 
-.info-container h6 {
+.info-container h5, .info-container h6 {
     display: inline-block;
     margin-right: 1em;
+}
+
+.info-container h6 {
     font-weight: normal;
 }
 

@@ -1,0 +1,16 @@
+.question-block {
+    grid-template-areas:
+            ". info"
+            ". text";
+    grid-template-rows: 1.5rem auto;
+    grid-template-columns: 1rem auto;
+}
+
+.question-block p {
+    margin: 0.4em 0.1em;
+}
+
+.info-container h5:first-of-type {
+    margin-right: 0;
+    font-weight: normal;
+}
