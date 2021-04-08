@@ -1,14 +1,24 @@
 {% extends "base.html" %}
 {% block head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='search_results.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='list_questions.css') }}">
     <title>Search results</title>
 {% endblock %}
 
 {% block content %}
+    <h3>Questions:</h3>
     {% for question in questions %}
-        {{ question }}
+        <div class="question-block">
+            <span class="text-container">
+                <h3>{{ question.title }}</h3>
+                <p>{{ question.message }}</p>
+            </span>
+        </div>
     {% endfor %}
+    <h3>Answers:</h3>
     {% for answer in answers %}
-        {{ answer }}
+        <div class="question-block">
+            <p>{{ answer.message }}</p>
+        </div>
     {% endfor %}
 {% endblock %}
