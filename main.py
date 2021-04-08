@@ -79,13 +79,13 @@ def add_question():
         return redirect(url_for('list_questions'))
 
 
-@app.route('/question/<question_id>/delete', methods=['POST'])
+@app.route('/question/<question_id>/delete', methods=['GET'])
 def delete_question(question_id):
     data_manager.delete_question(question_id)
     return redirect(request.referrer)
 
 
-@app.route('/answer/<answer_id>/delete', methods=['POST'])
+@app.route('/answer/<answer_id>/delete', methods=['GET'])
 def delete_answer(answer_id):
     data_manager.delete_answer(answer_id)
     return redirect(request.referrer)
