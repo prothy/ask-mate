@@ -91,22 +91,33 @@ def delete_answer(answer_id):
     return redirect(request.referrer)
 
 
-@app.route('/<edit_type>/<question_id>/edit', methods=['GET', 'POST'])
-def edit_question(edit_type, question_id):
-    result = data_manager.get_table_data(edit_type, question_id)[0]
+@app.route('/<edit_type>/<q_and_a_id>/edit', methods=['GET', 'POST'])
+def edit_q_and_a(edit_type, q_and_a_id):
+    result = data_manager.get_table_data(edit_type, q_and_a_id)[0]
 
     if request.method == 'GET':
-        return render_template('edit_question.html', result=result)
+        return render_template('edit_q_and_a.html', edit_type=edit_type, result=result)
     else:
-        title = request.form.get('input_title')
-        message = request.form.get('input_message')
+        if edit_type == "question":
+            title = request.form.get('input_title')
+            message = request.form.get('input_message')
 
-        data_manager.update_table(edit_type, question_id, {
-            title: title,
-            message: message
-        })
+            data_manager.update_table(edit_type, q_and_a_id, {
+                "title": title,
+                "message": message
+            })
 
-        return redirect(request.referrer)
+            return redirect("/")
+        elif edit_type == "answer":
+            message = request.form.get('input_message')
+
+            data_manager.update_table(edit_type, q_and_a_id, {
+                "message": message
+            })
+
+            question_id = data_manager.get_table_data("answer", q_and_a_id)[0]["question_id"]
+
+            return redirect(url_for("display_question", question_id=question_id))
 
 
 @app.route('/question/<question_id>/<action>')
