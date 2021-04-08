@@ -11,6 +11,13 @@
     height: auto;
 }
 
+.image-container img {
+    width: 10rem;
+    height: 5rem;
+
+    object-fit: cover;
+}
+
 .answers {
     padding: 2rem 0;
 }
