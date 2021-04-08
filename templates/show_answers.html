@@ -10,23 +10,21 @@
         <h1 class="title">{{ question.title }}</h1>
         <p class="desc">{{ question.message }}</p>
     </div>
-    {#{% for image in question['image'].strip('\'][\'').split('\', \'') %}
-    <a href="{{ url_for('static', filename="user-upload/"+image) }}">
-        <img src="{{ url_for('static', filename="user-upload/"+image) }}" alt="">
-    </a>
-    {% endfor %}#}
+    {% if question.image %}
+        <img src="../{{ question.image }}" alt="">
+    {% endif %}
     <div class="answers">
         <h3>Answers:</h3>
         {% if not answers %}<p>No answers yet!</p>{% endif %}
         {% for answer in answers %}
             <div class="question-block">
                 <span class="side-container">
-                    <a href="/question/{{ answer.id }}/vote_up">👍</a>
+                    <a href="/answer/{{ answer.id }}/vote_up">👍</a>
                     <span>
                         <h5>{{ answer.vote_number }}</h5>
                         <h6>votes</h6>
                     </span>
-                    <a href="/question/{{ answer.id }}/vote_down">👎</a>
+                    <a href="/answer/{{ answer.id }}/vote_down">👎</a>
                 </span>
                 <span class="info-container">
                     <h6>{{ answer.submission_time }}</h6>
