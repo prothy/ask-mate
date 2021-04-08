@@ -98,6 +98,9 @@ def add_question(cursor: RealDictCursor, values):
 @database_common.connection_handler
 def delete_question(cursor: RealDictCursor, question_id):
     query = f"""
+        DELETE FROM answer
+        WHERE question_id = {question_id};
+        
         DELETE FROM question
         WHERE id = {question_id}
     """
