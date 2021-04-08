@@ -1,3 +1,11 @@
+.content {
+    background: var(--div-bg);
+    border: 1px solid var(--accent-color);
+    padding: 1rem;
+    paddin-bottom: 0;
+    margin-bottom: -1px;
+}
+
 .content > .title {
     margin-bottom: 0.5em;
 }
@@ -11,6 +19,24 @@
     height: auto;
 }
 
+.image-container {
+    display: inline-block;
+
+    margin-top: 1em;
+    padding: 0.2rem 0.8rem;
+
+    background: #f9f9f9;
+
+    border-radius: 2px;
+    border: 1px solid var(--accent-color);
+}
+
+.image-container h5 {
+    color: var(--secondary-text);
+    line-height: 1.4em;
+    margin-bottom: 0.6em;
+}
+
 .image-container img {
     width: 10rem;
     height: 5rem;
@@ -18,8 +44,13 @@
     object-fit: cover;
 }
 
+.question-block {
+    width: unset;
+    margin: 0 calc(-1rem - 1px);
+}
+
 .answers {
-    padding: 2rem 0;
+    padding-top: 2rem;
 }
 
 /* "Answers" text */
