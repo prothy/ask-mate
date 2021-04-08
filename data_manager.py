@@ -124,7 +124,7 @@ def update_table(cursor: RealDictCursor, table_name, table_element_id, values):
     cursor.execute(query)
 
 
-def search_table(search_query: str):
+def search_table(search_query: str) -> tuple:
     """Searches questions and answers for string, returns a list of results in each"""
     question_results = search_questions(search_query)
     answer_results = search_answers(search_query)

@@ -124,6 +124,17 @@ def vote_answer(answer_id, action):
         return redirect(request.referrer)
 
 
+@app.route('/search')
+def list_matching():
+    # sort = request.args.get("sort") if request.args.get("sort") else "submission_time"
+    # order = request.args.get("order") if request.args.get("order") else "desc"
+
+    search_query = request.args.get("search")
+    questions, answers = data_manager.search_table(search_query)
+
+    return render_template('search_results.html', questions=questions, answers=answers)
+
+
 if __name__ == '__main__':
     app.run(
         debug=True
