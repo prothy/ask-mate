@@ -23,6 +23,8 @@ def list_questions():
     sort = request.args.get("sort") if request.args.get("sort") else "submission_time"
     order = request.args.get("order") if request.args.get("order") else "desc"
     questions_list = data_manager.sort_questions(sort, order)
+    for question in questions_list:
+        question["message"] = question["message"].replace('"', "'")
     return render_template('list_questions.html', questions=questions_list)
 
 
@@ -30,7 +32,10 @@ def list_questions():
 def display_question(question_id):
     """Routes to the specific ID of the selected question displaying corresponding answers"""
     question = data_manager.get_table_data("question", question_id)[0]
+    question["message"] = question["message"].replace('"', "'")
     answers_list = data_manager.get_answers_for_question(question_id)
+    for answer in answers_list:
+        answer["message"] = answer["message"].replace('"', "'")
     data_manager.update_view_count(question_id)
     return render_template('show_answers.html', question=question, answers=answers_list)
 
@@ -42,6 +47,9 @@ def add_answer(question_id):
     else:
         message = request.form.get('input_message')
         picture = request.form.get('input_image_url')
+
+        message = message.replace("'", '"')
+
         data_manager.add_answer(
             {
                 'question_id': question_id,
@@ -59,6 +67,7 @@ def add_question():
     else:
         title = request.form.get('input_title')
         message = request.form.get('input_message')
+        message = message.replace("'", '"')
 
         images = request.files.getlist('input_image')
         for image in images:
@@ -97,6 +106,7 @@ def delete_answer(answer_id):
 @app.route('/<edit_type>/<q_and_a_id>/edit', methods=['GET', 'POST'])
 def edit_q_and_a(edit_type, q_and_a_id):
     result = data_manager.get_table_data(edit_type, q_and_a_id)[0]
+    result["message"] = result['message'].replace('"', "'")
 
     if request.method == 'GET':
         return render_template('edit_q_and_a.html', edit_type=edit_type, result=result)
@@ -104,6 +114,7 @@ def edit_q_and_a(edit_type, q_and_a_id):
         if edit_type == "question":
             title = request.form.get('input_title')
             message = request.form.get('input_message')
+            message = message.replace("'", '"')
 
             data_manager.update_table(edit_type, q_and_a_id, {
                 "title": title,
@@ -113,6 +124,7 @@ def edit_q_and_a(edit_type, q_and_a_id):
             return redirect("/")
         elif edit_type == "answer":
             message = request.form.get('input_message')
+            message = message.replace("'", '"')
 
             data_manager.update_table(edit_type, q_and_a_id, {
                 "message": message
@@ -146,6 +158,12 @@ def list_matching():
 
     search_query = request.args.get("search")
     questions, answers = data_manager.search_table(search_query)
+    for question in questions:
+        question["message"] = question["message"].replace('"', "'")
+        question["message"] = "<p>" + question["message"].replace(search_query, f"<span class='search-query'>{search_query}</span>") + "</p>"
+    for answer in answers:
+        answer["message"] = answer["message"].replace('"', "'")
+        answer["message"] = "<p>" + answer["message"].replace(search_query, f"<span class='search-query'>{search_query}</span>") + "</p>"
 
     return render_template('search_results.html', questions=questions, answers=answers)
 
