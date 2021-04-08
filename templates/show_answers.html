@@ -32,15 +32,19 @@
                     <a href="/answer/{{ answer.id }}/vote_down">👎</a>
                 </span>
                 <span class="info-container">
-                    <h6>{{ answer.submission_time }}</h6>
+                    <span>
+                        <h6>{{ answer.submission_time }}</h6>
+                    </span>
+                    <span>
+                        <a href="/answer/{{ answer.id }}/edit">Edit</a>
+                        <a href="/answer/{{ answer.id }}/delete" class="action-container--button btn btnDelete"><i class="far fa-trash-alt"></i></a>
+                    </span>
                 </span>
                 <span class="text-container">
                     <p class="text-container message">
                         {{ answer.message }}
                     </p>
                 </span>
-                <a href="/answer/{{ answer.id }}/edit">Edit</a>
-                <a href="/answer/{{ answer.id }}/delete" class="action-container--button btn btnDelete"><i class="far fa-trash-alt"></i></a>
 
                 {#<span class="answer-info" >
                     <span class="voting-container">

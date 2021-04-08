@@ -41,12 +41,11 @@ def get_table_data(cursor: RealDictCursor, table_name, table_element_id):
 
 
 @database_common.connection_handler
-def update_votes(cursor: RealDictCursor, vote_type: str, item_id, vote_action: str):
+def update_votes(cursor: RealDictCursor, vote_type: str, item_id: int, vote_action: str):
     """Updates vote count in database
 
-    Parameters:
-     vote_type - Table name to update ("question" or "answer")
-     vote_action - "vote_up" or "vote_down"
+    @param vote_type: Table name to update ("question" or "answer")
+    @param vote_action: "vote_up" or "vote_down"
     """
     calc_votes = "vote_number + 1" if vote_action == "vote_up" else "vote_number - 1"
 
@@ -134,7 +133,8 @@ def update_table(cursor: RealDictCursor, table_name, table_element_id, values):
 
 
 def search_table(search_query: str) -> tuple:
-    """Searches questions and answers for string, returns a list of results in each"""
+    """Searches questions and answers for string, returns a list of results in each
+    @return: Tuple in format (question_results, answer_results)"""
     question_results = search_questions(search_query)
     answer_results = search_answers(search_query)
 

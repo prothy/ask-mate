@@ -27,9 +27,15 @@
             <a href="/question/{{ question.id }}/vote_down">👎</a>
         </span>
         <span class="info-container">
-            <h6>{{ question.view_number }} views</h6>
-            <h6 style="font-weight: bold;">·</h6>
-            <h6>{{ question.submission_time }}</h6>
+            <span>
+                <h6>{{ question.view_number }} views</h6>
+                <h6 style="font-weight: bold;">·</h6>
+                <h6>{{ question.submission_time }}</h6>
+            </span>
+            <span>
+                <a href="/question/{{ question.id }}/edit">Edit</a>
+                <a href="/question/{{ question.id }}/delete" class="action-container--button btn btnDelete"><i class="far fa-trash-alt"></i></a>
+            </span>
         </span>
         <a class="text-container" href="/question/{{ question['id'] }}">
             <h3 class="text-container title">
@@ -39,36 +45,6 @@
                 {{ question.message }}
             </p>
         </a>
-        {#<table>
-            <tr>
-                <td class="sideBar"><a href="/question/{{ question['id'] }}/{{ True }}">👍</a></td>
-                <td class="text"  rowspan="3">
-                    <a class="text-container" href="/question/{{ question['id'] }}">
-                        <h3 class="title">{{ question['title'] }}</h3>
-                        <p class="time">{{ question['converted_time'] }} {{ question['view_number'] }} views</p>
-                        <p class="text-container desc">{{ question['message'] }}</p>
-                    </a>
-                </td>
-                <td class="sideBar">
-                    <a class="btn btnUpdate" href="/question/{{ question['id'] }}/edit"><i class="fas fa-edit"></i></a>
-                </td>
-                <td class="sideBar">#}
-            <a href="/question/{{ question.id }}/edit">Edit</a>
-            <a href="/question/{{ question.id }}/delete" class="action-container--button btn btnDelete"><i class="far fa-trash-alt"></i></a>
-                {#</td>
-            </tr>
-            <tr>
-                <td class="sideBar">
-                    <p>{{ question['vote_number'] }}</p>
-                    <p>votes</p>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="sideBar padding"><a href="/question/{{ question['id'] }}/{{ False }}">👎</a></td>
-                <td></td>
-            </tr>
-        </table>#}
     </div>
 {% endfor %}
     <a class="btn new" href='/add-question'><i class="fas fa-plus-circle fa-3x"></i></a>

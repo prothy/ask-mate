@@ -12,6 +12,9 @@ app = Flask(__name__)
 # Evaluate UPLOAD_FOLDER relative to the current Flask App's execution directory
 app.config['UPLOAD_FOLDER'] = os.path.join(APP_ROOT, UPLOAD_FOLDER)
 
+# TODO: Fix sort by button
+# TODO: Style search result page
+
 
 @app.route('/')
 @app.route('/list')

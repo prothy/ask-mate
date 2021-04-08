@@ -12,16 +12,12 @@ sortBtn.addEventListener('click', (e) => {
         }
     }
 
-    console.log(activeSort)
-
     for (let i = 0; i < activeSort.length; i++) {
         i === 0 ? hrefString += "?" : hrefString += "&"
         hrefString += `${sort[i].name}=${sort[i].value}`
     }
 
-    console.log(hrefString)
-
-    // if (hrefString) {
-    //     window.location.href = hrefString;
-    // }
+    if (hrefString) {
+        window.location.href = hrefString;
+    }
 });

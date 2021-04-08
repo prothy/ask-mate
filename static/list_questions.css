@@ -78,13 +78,14 @@
     grid-area: info;
     display: flex;
     align-items: center;
+    justify-content: space-between;
 
     padding: 0 0.1rem;
 
     color: var(--secondary-text);
 }
 
-.info-container > h6 {
+.info-container h6 {
     display: inline-block;
     margin-right: 1em;
     font-weight: normal;
