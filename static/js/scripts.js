@@ -1,10 +1,9 @@
 const sort = document.querySelectorAll('.sort-select');
 const sortBtn = document.querySelector('#sort-button');
 
-let activeSort = [];
-
 sortBtn.addEventListener('click', (e) => {
     let hrefString = ""
+    let activeSort = [];
 
     for (let i = 0; i < sort.length; i++) {
         if (sort[i].value) {
@@ -13,8 +12,8 @@ sortBtn.addEventListener('click', (e) => {
     }
 
     for (let i = 0; i < activeSort.length; i++) {
-        i === 0 ? hrefString += "?" : hrefString += "&"
-        hrefString += `${sort[i].name}=${sort[i].value}`
+        i === 0 ? hrefString += "?" : hrefString += "&";
+        hrefString += `${activeSort[i].name}=${activeSort[i].value}`;
     }
 
     if (hrefString) {
