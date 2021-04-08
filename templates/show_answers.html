@@ -39,6 +39,8 @@
                         {{ answer.message }}
                     </p>
                 </span>
+                <a href="/answer/{{ answer.id }}/delete" class="action-container--button btn btnDelete"><i class="far fa-trash-alt"></i></a>
+
                 {#<span class="answer-info" >
                     <span class="voting-container">
                         <span class="voting-container__buttons">
@@ -58,13 +60,7 @@
             </div>
         {% endfor %}
     </div>
-    <body>
-    {#<a href='/answer/{{ question['id'] }}/new-answer'>#}
-         <a class="btn new" href='/question/{{ question['id'] }}/new-answer'><i class="fas fa-comment-dots fa-3x"></i></a>
-    {#<a href='/'>
-        <input type="button" value="BACK">
-    </a>#}
-
-    </body>
+    <a class="btn new" href='/question/{{ question['id'] }}/new-answer'><i class="fas fa-comment-dots fa-3x"></i></a>
+    <a href='/'><input type="button" value="BACK"></a>
 
 {% endblock %}
