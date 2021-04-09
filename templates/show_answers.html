@@ -18,7 +18,7 @@
     {% if question.image %}
         <span class="image-container">
             <h5>Attached images (click for full size):</h5>
-            <a href="../{{ question.image }}" target="_blank"><img src="../{{ question.image }}" alt="Image attachment"></a>
+            <a href="{{ url_for('static', filename=question.image) }}" target="_blank"><img src="{{ url_for('static', filename=question.image) }}" alt="Image attachment"></a>
         </span>
     {% endif %}
 
