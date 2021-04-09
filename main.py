@@ -4,13 +4,15 @@ import data_manager
 import os
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
-UPLOAD_FOLDER = "static/user-upload"
+UPLOAD_FOLDER = "static/user-upload/"
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
 
 # Evaluate UPLOAD_FOLDER relative to the current Flask App's execution directory
 app.config['UPLOAD_FOLDER'] = os.path.join(APP_ROOT, UPLOAD_FOLDER)
+print(APP_ROOT)
+print(app.config['UPLOAD_FOLDER'])
 
 
 @app.route('/')
@@ -69,13 +71,16 @@ def add_question():
         images = request.files.getlist('input_image')
         for image in images:
             if image.filename != "":
-                f = os.path.join(UPLOAD_FOLDER, secure_filename(image.filename))
-                image.save(f)
+                filename = secure_filename(image.filename)
+                file_path = app.config['UPLOAD_FOLDER'] + filename
+                save_path = "user-upload/" + filename
+                image.save(file_path)
+
                 data_manager.add_question(
                     {
                         'title': title,
                         'message': message,
-                        'image': f
+                        'image': save_path
                     }
                 )
             else:
