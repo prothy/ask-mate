@@ -1,4 +1,5 @@
-from psycopg2.extras import RealDictCursor, DictCursor, NamedTupleCursor
+import bcrypt as bcrypt
+from psycopg2.extras import RealDictCursor
 
 import database_common
 import datetime
@@ -167,3 +168,30 @@ def search_answers(cursor: RealDictCursor, search_query: str):
 
     cursor.execute(query)
     return cursor.fetchall()
+
+@database_common.connection_handler
+def registrate_user(cursor: RealDictCursor, values):
+    hashed_password = bcrypt.hashpw(values['password'].encode('utf-8'), bcrypt.gensalt())
+    hashed_password = hashed_password.decode('utf-8')
+
+    query = f"""
+            INSERT INTO users(username, email, password, reputation)
+            VALUES ('{values['username']}', '{values['email']}', '{hashed_password}', 0)
+            """
+
+    cursor.execute(query)
+
+@database_common.connection_handler
+def login(cursor: RealDictCursor, values):
+    query = f"""
+                SELECT password
+                FROM users
+                WHERE '{username}' LIKE '{values[username]}'
+                """
+
+    result = cursor.execute(query)
+    return verify_password(values[password], result.fetchall()[0])
+
+def verify_password(plain_text_password, hashed_password):
+    hashed_bytes_password = hashed_password.encode('utf-8')
+    return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_bytes_password)
