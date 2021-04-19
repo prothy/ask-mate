@@ -187,12 +187,20 @@ def registration():
             }
         )
 
-        return render_template('/', username=username, email=email, password=password)
+        return render_template('/')
 
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
-    return render_template('login.html')
+    if flask.request.method == 'GET':
+        return render_template('login.html', message='')
+    else:
+        username = request.form.get('username')
+        password = request.form.get('password')
+        if data_manager.login(username=username, password=password):
+            return render_template('/')
+        else:
+            return render_template('login.html', message='Invalid password or username. Please try again!')
 
 if __name__ == '__main__':
     app.run(

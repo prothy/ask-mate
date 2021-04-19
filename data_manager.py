@@ -1,8 +1,8 @@
+import bcrypt as bcrypt
 from psycopg2.extras import RealDictCursor
 
 import database_common
 import datetime
-import bycript
 
 
 @database_common.connection_handler
@@ -178,6 +178,16 @@ def registrate_user(cursor: RealDictCursor, values):
 
     cursor.execute(query)
 
+@database_common.connection_handler
+def login(cursor: RealDictCursor, values):
+    query = f"""
+                SELECT password
+                FROM users
+                WHERE '{username}' LIKE '{values[username]}'
+                """
+
+    result = cursor.execute(query)
+    return verify_password(values[password], result.fetchall()[0])
 
 def verify_password(plain_text_password, hashed_password):
     hashed_bytes_password = hashed_password.encode('utf-8')

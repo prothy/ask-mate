@@ -3,25 +3,26 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Registration</title>
+        <title>Login</title>
         <link rel="stylesheet" href="">
     </head>
     <body>
-        <h1>Registration</h1>
-        <form action="/registration" method="post">
+        <h1>Login</h1>
+        <form action="/login" method="post">
             <label for="username">Username: </label>
             <input name="username" type="text" placeholder="MyName">
             <br>
 
-            <label for="email">Email: </label>
-            <input name="email" type="text" placeholder="your@email.com">
-            <br>
-
             <label for="password">Password: </label>
             <input name="password" type="text" placeholder="******">
+
+            {% if message != '' %}
+                <br>
+                {{ message }}
+            {% endif %}
             <br><br>
 
-            <button type="submit" >Registrate</button>
+            <button type="submit" >Login</button>
         </form>
         <script src="" async defer></script>
     </body>
