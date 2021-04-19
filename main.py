@@ -24,6 +24,7 @@ def list_questions():
     questions_list = data_manager.sort_questions(sort, order)
     for question in questions_list:
         question["message"] = question["message"].replace('"', "'")
+        print(question['tags'])
     return render_template('list_questions.html', questions=questions_list)
 
 
