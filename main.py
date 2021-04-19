@@ -170,6 +170,30 @@ def list_matching():
     return render_template('search_results.html', questions=questions, answers=answers)
 
 
+@app.route('/registration', methods=['POST', 'GET'])
+def registration():
+    if flask.request.method == 'GET':
+        return render_template('registration.html')
+    else:
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        data_manager.registrate_user(
+            {
+                'username': username,
+                'email': email,
+                'password':password
+            }
+        )
+
+        return render_template('/', username=username, email=email, password=password)
+
+
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+    return render_template('login.html')
+
 if __name__ == '__main__':
     app.run(
         debug=True
