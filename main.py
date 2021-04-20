@@ -1,8 +1,9 @@
 import os
 
 from flask import Flask, request, redirect, render_template, url_for, flash, session
-# from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename, escape
+from models import User, Post
 
 import data_manager
 from form import RegistrationForm, LoginForm
@@ -13,32 +14,8 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '406d389c74e700a2a35307d872bb618e'
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://balazstoth:postgresmac@localhost:5432/askmate2'
-# db = SQLAlchemy(app)
-#
-#
-# class User(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     username = db.Column(db.String(20), unique=True, nullable=False)
-#     email = db.Column(db.String(120), unique=True, nullable=False)
-#     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
-#     password = db.Column(db.String(60), nullable=False)
-#     posts = db.relationship('Post', backref='author', lazy=True)
-#
-#     def __repr__(self):
-#         return f"User('{self.username}', '{self.email}, '{self.image_file}')"
-#
-#
-# class Post(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     title = db.Column(db.String(100), nullable=False)
-#     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-#     content = db.Column(db.Text, nullable=False)
-#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-#
-#     def __repr__(self):
-#         return f"Post('{self.title}', '{self.date_posted}')"
-
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://balazstoth:postgresmac@localhost:5432/askmate2'
+db = SQLAlchemy(app)
 
 # Evaluate UPLOAD_FOLDER relative to the current Flask App's execution directory
 app.config['UPLOAD_FOLDER'] = os.path.join(APP_ROOT, UPLOAD_FOLDER)
