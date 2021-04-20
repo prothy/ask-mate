@@ -2,6 +2,7 @@ from flask import Flask, request, redirect, render_template, url_for, abort
 from werkzeug.utils import secure_filename
 import data_manager
 import os
+import wtfform
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = "static/user-upload/"
@@ -172,6 +173,7 @@ def list_matching():
 
 @app.route('/registration', methods=['POST', 'GET'])
 def registration():
+    import flask
     if flask.request.method == 'GET':
         return render_template('registration.html')
     else:
@@ -183,7 +185,7 @@ def registration():
             {
                 'username': username,
                 'email': email,
-                'password':password
+                'password': password
             }
         )
 
@@ -192,6 +194,7 @@ def registration():
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
+    import flask
     if flask.request.method == 'GET':
         return render_template('login.html', message='')
     else:

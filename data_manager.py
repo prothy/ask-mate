@@ -179,7 +179,7 @@ def registrate_user(cursor: RealDictCursor, values):
     cursor.execute(query)
 
 @database_common.connection_handler
-def login(cursor: RealDictCursor, values):
+def login(cursor: RealDictCursor, values, username='', password=''):
     query = f"""
                 SELECT password
                 FROM users
