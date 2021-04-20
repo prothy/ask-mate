@@ -6,18 +6,27 @@
 {% block content %}
     <div class="top-bar">
         <div>
-            <select class="sort-select" name="sort">
-                <option disabled selected value>Sort by</option>
-                <option value="submission_time">Upload time</option>
-                <option value="view_number">Views</option>
-                <option value="vote_number">Votes</option>
-            </select>
-            <select class="sort-select" name="order">
-                <option disabled selected value>Order by</option>
-                <option value="desc">Descending</option>
-                <option value="asc">Ascending</option>
-            </select>
-            <input id="sort-button" type="button" value="SORT" class="btn">
+            <div>
+                <select class="sort-select" name="sort">
+                    <option disabled selected value>Sort by</option>
+                    <option value="submission_time">Upload time</option>
+                    <option value="view_number">Views</option>
+                    <option value="vote_number">Votes</option>
+                </select>
+                <select class="sort-select" name="order">
+                    <option disabled selected value>Order by</option>
+                    <option value="desc">Descending</option>
+                    <option value="asc">Ascending</option>
+                </select>
+                <input id="sort-button" type="button" value="SORT" class="btn">
+            </div>
+
+            <div class="tag-list">
+                <span>Filter by tag:</span>
+                {% for tag in tags %}
+                    <a href="" class="text-container tag {{ tag['name'] }}">{{ tag['name'] }}</a>
+                {% endfor %}
+            </div>
         </div>
 
         <a class="btn new" href='/add-question'><i class="fas fa-plus"></i> ASK QUESTION</a>

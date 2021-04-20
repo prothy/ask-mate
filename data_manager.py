@@ -81,7 +81,7 @@ def update_reputation(cursor: RealDictCursor, vote_type: str, username: str, vot
             calc_reputation = "reputation + 5"
         else:
             calc_reputation = "reputation + 10"
-    # TODO: Make option: Accept answer (this function works without it)
+    #TODO: Make option: Accept answer (this function works without it)
     elif vote_action == "accepted":
         calc_reputation = "reputation + 15"
     else:

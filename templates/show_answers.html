@@ -34,6 +34,13 @@
                         <h6>votes</h6>
                     </span>
                     <a href="/answer/{{ answer.id }}/vote_down"><i class="fas fa-thumbs-down"></i></a>
+                    {% if question.accepted == answer.id %}
+                        <h6>Accepted</h6>
+                    {% else %}
+                        {% if question.accepted == None %}
+                            <a href="/answer/{{ answer.id }}/accept"><i class="fas fa-check"></i></a>
+                        {% endif %}
+                    {% endif %}
                 </span>
                 <span class="info-container">
                     <span>
