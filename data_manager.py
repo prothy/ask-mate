@@ -71,6 +71,26 @@ def update_votes(cursor: RealDictCursor, vote_type: str, item_id: int, vote_acti
     """
     cursor.execute(query)
 
+def update_reputation(cursor: RealDictCursor, vote_type: str, username: str, vote_action: str):
+    calc_reputation = "reputation"
+    if vote_action == "vote_up":
+        if vote_type == "question":
+            calc_reputation = "reputation + 5"
+        else:
+            calc_reputation = "reputation + 10"
+    #TODO: Make option: Accept answer (this function works without it)
+    elif vote_action == "accepted":
+        calc_reputation = "reputation + 15"
+    else:
+        calc_reputation = "reputation - 2"
+
+    query = f"""
+        UPDATE {users}
+        SET reputation = {calc_reputation}
+        WHERE username = {username}
+    """
+    cursor.execute(query)
+
 
 @database_common.connection_handler
 def update_view_count(cursor: RealDictCursor, question_id):

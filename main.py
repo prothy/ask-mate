@@ -150,6 +150,7 @@ def edit_q_and_a(edit_type, q_and_a_id):
 # <action>: 'vote_up' or 'vote_down'
 def vote_question(question_id, action):
     if action == "vote_up" or action == "vote_down":
+        data_manager.update_reputation("question", username=session['username'] , action)
         data_manager.update_votes("question", question_id, action)
         return redirect(request.referrer)
 
@@ -158,6 +159,7 @@ def vote_question(question_id, action):
 # <action>: 'vote_up' or 'vote_down'
 def vote_answer(answer_id, action):
     if action == "vote_up" or action == "vote_down":
+        data_manager.update_reputation("question", username=session['username'] , action)
         data_manager.update_votes("answer", answer_id, action)
         return redirect(request.referrer)
 
