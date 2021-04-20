@@ -1,3 +1,7 @@
+.tag
+
+/* QUESTION DIVS */
+
 .question-block {
     display: grid;
 
@@ -63,28 +67,6 @@
 
 .text-container.title {
 
-}
-
-.tag {
-    font-size: 8pt;
-    border: 1px solid var(--accent-color);
-    padding: 0.1em 0.5em;
-    border-radius: 4px;
-}
-
-.tag.css {
-    background-color: #88c9f3;
-    border-color: #0048ff;
-}
-
-.tag.python {
-    background: #ffb868;
-    border-color: #ff7f0d
-}
-
-.tag.sql {
-    background: #8fffa4;
-    border-color: #579e65;
 }
 
 /* container that contains vote buttons */

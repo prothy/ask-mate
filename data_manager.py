@@ -12,6 +12,7 @@ import datetime
 class MyForm(FlaskForm):
     name = StringField('name', validators=[DataRequired()])
 
+
 @database_common.connection_handler
 def sort_questions(cursor: RealDictCursor, order_by, order_direction):
     """Sorts questions by the given criteria, defaults to submission time"""
@@ -22,6 +23,16 @@ def sort_questions(cursor: RealDictCursor, order_by, order_direction):
         INNER JOIN tag t ON t.id = qt.tag_id
         GROUP BY q.id
         ORDER BY {order_by} {order_direction}
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def get_tags(cursor: RealDictCursor):
+    query = """
+        SELECT name
+        FROM tag
     """
     cursor.execute(query)
     return cursor.fetchall()
@@ -176,6 +187,7 @@ def search_answers(cursor: RealDictCursor, search_query: str):
     cursor.execute(query)
     return cursor.fetchall()
 
+
 @database_common.connection_handler
 def registrate_user(cursor: RealDictCursor, values):
     hashed_password = bcrypt.hashpw(values['password'].encode('utf-8'), bcrypt.gensalt())
@@ -188,6 +200,7 @@ def registrate_user(cursor: RealDictCursor, values):
 
     cursor.execute(query)
 
+
 @database_common.connection_handler
 def login(cursor: RealDictCursor, values):
     query = f"""
@@ -198,6 +211,7 @@ def login(cursor: RealDictCursor, values):
 
     result = cursor.execute(query)
     return verify_password(values['password'], result.fetchall()[0])
+
 
 def verify_password(plain_text_password, hashed_password):
     hashed_bytes_password = hashed_password.encode('utf-8')

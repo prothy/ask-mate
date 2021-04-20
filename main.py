@@ -22,11 +22,14 @@ def list_questions():
     """INITIAL: Lists the questions by order"""
     sort = request.args.get("sort") if request.args.get("sort") else "submission_time"
     order = request.args.get("order") if request.args.get("order") else "desc"
+
     questions_list = data_manager.sort_questions(sort, order)
     for question in questions_list:
         question["message"] = question["message"].replace('"', "'")
-        print(question['tags'])
-    return render_template('list_questions.html', questions=questions_list)
+
+    tags = data_manager.get_tags()
+
+    return render_template('list_questions.html', questions=questions_list, tags=tags)
 
 
 @app.route('/question/<question_id>')
