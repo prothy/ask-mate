@@ -24,7 +24,8 @@ CREATE TABLE question (
     vote_number integer,
     title text,
     message text,
-    image text
+    image text,
+    accepted text
 );
 
 DROP TABLE IF EXISTS public.answer;
@@ -35,6 +36,7 @@ CREATE TABLE answer (
     question_id integer,
     message text,
     image text
+    --, username text --(just put it here, because it will be necessary for accept answer, but this part is not implemented yet)
 );
 
 DROP TABLE IF EXISTS public.comment;
