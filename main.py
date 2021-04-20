@@ -1,14 +1,18 @@
-from flask import Flask, request, redirect, render_template, url_for, abort
-from werkzeug.utils import secure_filename
-import data_manager
 import os
-import wtfform
+
+from flask import Flask, request, redirect, render_template, url_for, flash, session
+from werkzeug.utils import secure_filename, escape
+
+import data_manager
+from form import RegistrationForm, LoginForm
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = "static/user-upload/"
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
+
+app.config['SECRET_KEY'] = '406d389c74e700a2a35307d872bb618e'
 
 # Evaluate UPLOAD_FOLDER relative to the current Flask App's execution directory
 app.config['UPLOAD_FOLDER'] = os.path.join(APP_ROOT, UPLOAD_FOLDER)
@@ -22,11 +26,14 @@ def list_questions():
     """INITIAL: Lists the questions by order"""
     sort = request.args.get("sort") if request.args.get("sort") else "submission_time"
     order = request.args.get("order") if request.args.get("order") else "desc"
+
     questions_list = data_manager.sort_questions(sort, order)
     for question in questions_list:
         question["message"] = question["message"].replace('"', "'")
-        print(question['tags'])
-    return render_template('list_questions.html', questions=questions_list)
+
+    tags = data_manager.get_tags()
+
+    return render_template('list_questions.html', questions=questions_list, tags=tags)
 
 
 @app.route('/question/<question_id>')
@@ -56,7 +63,7 @@ def add_answer(question_id):
                 'question_id': question_id,
                 'message': message,
                 'image': picture
-             }
+            }
         )
         return redirect(url_for("display_question", question_id=question_id))
 
@@ -143,6 +150,7 @@ def edit_q_and_a(edit_type, q_and_a_id):
 # <action>: 'vote_up' or 'vote_down'
 def vote_question(question_id, action):
     if action == "vote_up" or action == "vote_down":
+        data_manager.update_reputation(vote_type="question", username=session['username'], vote_action=action)
         data_manager.update_votes("question", question_id, action)
         return redirect(request.referrer)
 
@@ -151,7 +159,12 @@ def vote_question(question_id, action):
 # <action>: 'vote_up' or 'vote_down'
 def vote_answer(answer_id, action):
     if action == "vote_up" or action == "vote_down":
+        data_manager.update_reputation("answer", escape(username=session['username']), action)
         data_manager.update_votes("answer", answer_id, action)
+        return redirect(request.referrer)
+    elif action == "accept":
+        data_manager.update_reputation("answer", escape(username=session['username']), action)
+        data_manager.update_accepted(answer_id=answer_id)
         return redirect(request.referrer)
 
 
@@ -164,47 +177,51 @@ def list_matching():
     questions, answers = data_manager.search_table(search_query)
     for question in questions:
         question["message"] = question["message"].replace('"', "'")
-        question["message"] = "<p>" + question["message"].replace(search_query, f"<span class='search-query'>{search_query}</span>") + "</p>"
+        question["message"] = "<p>" + question["message"].replace(search_query,
+                                                                  f"<span class='search-query'>{search_query}</span>") + "</p>"
     for answer in answers:
         answer["message"] = answer["message"].replace('"', "'")
-        answer["message"] = "<p>" + answer["message"].replace(search_query, f"<span class='search-query'>{search_query}</span>") + "</p>"
+        answer["message"] = "<p>" + answer["message"].replace(search_query,
+                                                              f"<span class='search-query'>{search_query}</span>") + "</p>"
 
     return render_template('search_results.html', questions=questions, answers=answers)
 
 
-@app.route('/registration', methods=['POST', 'GET'])
-def registration():
-    import flask
-    if flask.request.method == 'GET':
-        return render_template('registration.html')
-    else:
-        username = request.form.get('username')
-        email = request.form.get('email')
-        password = request.form.get('password')
-
-        data_manager.registrate_user(
-            {
-                'username': username,
-                'email': email,
-                'password': password
-            }
-        )
-
-        return render_template('/')
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+    # data_manager.register_user()
+    if form.validate_on_submit():
+        flash(f"Account created for {form.username.data}!", 'success')
+        return redirect(url_for('list_questions'))
+    return render_template("register.html", title='Register', form=form)
 
 
-@app.route('/login', methods=['POST', 'GET'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    import flask
-    if flask.request.method == 'GET':
-        return render_template('login.html', message='')
-    else:
-        username = request.form.get('username')
-        password = request.form.get('password')
-        if data_manager.login(username=username, password=password):
-            return render_template('/')
+    form = LoginForm()
+    if form.validate_on_submit():
+        if form.email.data == 'admin@admin.com' and form.password.data == 'admin':
+            flash('You have been logged in!', 'success')
+            return redirect(url_for('list_questions'))
         else:
-            return render_template('login.html', message='Invalid password or username. Please try again!')
+            flash('Login unsuccessful. Please check username and password.', 'danger')
+    return render_template("login.html", title='Login', form=form)
+    # if request.method == 'GET':
+    #     return render_template('login.html', message='')
+    # else:
+    #     username = request.form.get('username')
+    #     password = request.form.get('password')
+    #     if data_manager.login(username=username, password=password):
+    #         return render_template('/')
+    #     else:
+    #         return render_template('login.html', message='Invalid password or username. Please try again!')
+
+
+@app.route("/logout")
+def logout():
+    pass
+
 
 if __name__ == '__main__':
     app.run(

@@ -1,20 +1,32 @@
-import bcrypt as bcrypt
+import datetime
+
+import bcrypt
+import cursor as cursor
 from psycopg2.extras import RealDictCursor
 
 import database_common
-import datetime
 
 
 @database_common.connection_handler
 def sort_questions(cursor: RealDictCursor, order_by, order_direction):
     """Sorts questions by the given criteria, defaults to submission time"""
     query = f"""
-        SELECT submission_time, view_number, vote_number, title, message, image, array_agg(name) tags
+        SELECT q.id, submission_time, view_number, vote_number, title, message, image, array_agg(name) tags
         FROM question q
         INNER JOIN question_tag qt ON q.id = qt.question_id
         INNER JOIN tag t ON t.id = qt.tag_id
         GROUP BY q.id
         ORDER BY {order_by} {order_direction}
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def get_tags(cursor: RealDictCursor):
+    query = """
+        SELECT name
+        FROM tag
     """
     cursor.execute(query)
     return cursor.fetchall()
@@ -62,6 +74,46 @@ def update_votes(cursor: RealDictCursor, vote_type: str, item_id: int, vote_acti
 
 
 @database_common.connection_handler
+def update_reputation(cursor: RealDictCursor, vote_type: str, username: str, vote_action: str):
+    calc_reputation = "reputation"
+    if vote_action == "vote_up":
+        if vote_type == "question":
+            calc_reputation = "reputation + 5"
+        else:
+            calc_reputation = "reputation + 10"
+    # TODO: Make option: Accept answer (this function works without it)
+    elif vote_action == "accepted":
+        calc_reputation = "reputation + 15"
+    else:
+        calc_reputation = "reputation - 2"
+
+    query = f"""
+        UPDATE users
+        SET reputation = {calc_reputation}
+        WHERE username = {username}
+    """
+    cursor.execute(query)
+
+
+@database_common.connection_handler
+def update_accepted(answer_id):
+    find_question_id = f"""
+    SELECT question_id
+    FROM answer
+    WHERE id = {answer_id}
+    """
+    cursor.execute(find_question_id)
+    question_id = cursor.fetchall()
+
+    update_question = f"""
+        UPDATE question
+        SET accepted = {answer_id}
+        WHERE id = {question_id}
+    """
+    cursor.execute(update_question)
+
+
+@database_common.connection_handler
 def update_view_count(cursor: RealDictCursor, question_id):
     """Updates the corresponding view count"""
     query = f"""
@@ -88,7 +140,7 @@ def add_question(cursor: RealDictCursor, values):
     if "image" in values.keys():
         query = f"""
             INSERT INTO question(submission_time, view_number, vote_number, title, message, image)
-            VALUES ('{submission_time}', 0, 0, '{values['title']}', '{values['message']}', '{values["image"]}')
+            VALUES ('{submission_time}', 0, 0, '{values['title']}', '{values['message']}', '{values["image"]}', NONE)
         """
     else:
         query = f"""
@@ -103,7 +155,7 @@ def delete_question(cursor: RealDictCursor, question_id):
     query = f"""
         DELETE FROM answer
         WHERE question_id = {question_id};
-        
+
         DELETE FROM question
         WHERE id = {question_id}
     """
@@ -169,8 +221,9 @@ def search_answers(cursor: RealDictCursor, search_query: str):
     cursor.execute(query)
     return cursor.fetchall()
 
+
 @database_common.connection_handler
-def registrate_user(cursor: RealDictCursor, values):
+def register_user(cursor: RealDictCursor, values):
     hashed_password = bcrypt.hashpw(values['password'].encode('utf-8'), bcrypt.gensalt())
     hashed_password = hashed_password.decode('utf-8')
 
@@ -181,16 +234,18 @@ def registrate_user(cursor: RealDictCursor, values):
 
     cursor.execute(query)
 
+
 @database_common.connection_handler
-def login(cursor: RealDictCursor, values, username='', password=''):
+def login(cursor: RealDictCursor, values):
     query = f"""
                 SELECT password
                 FROM users
-                WHERE '{username}' LIKE '{values[username]}'
+                WHERE username LIKE '{values['username']}'
                 """
 
     result = cursor.execute(query)
-    return verify_password(values[password], result.fetchall()[0])
+    return verify_password(values['password'], result.fetchall()[0])
+
 
 def verify_password(plain_text_password, hashed_password):
     hashed_bytes_password = hashed_password.encode('utf-8')
