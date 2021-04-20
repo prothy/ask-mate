@@ -48,6 +48,9 @@
             <h3 class="text-container title">
                 {{ question.title }}
             </h3>
+            {% for tag in question.tags %}
+                <span class="text-container tag {{ tag }}">{{ tag }}</span>
+            {% endfor %}
             <p class="text-container message">
                 {{ question.message }}
             </p>
