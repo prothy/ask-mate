@@ -1,16 +1,9 @@
+import datetime
+
 import bcrypt
 from psycopg2.extras import RealDictCursor
 
-from flask_wtf import FlaskForm
-from wtforms import StringField
-from wtforms.validators import DataRequired
-
 import database_common
-import datetime
-
-
-class MyForm(FlaskForm):
-    name = StringField('name', validators=[DataRequired()])
 
 
 @database_common.connection_handler
@@ -189,7 +182,7 @@ def search_answers(cursor: RealDictCursor, search_query: str):
 
 
 @database_common.connection_handler
-def registrate_user(cursor: RealDictCursor, values):
+def register_user(cursor: RealDictCursor, values):
     hashed_password = bcrypt.hashpw(values['password'].encode('utf-8'), bcrypt.gensalt())
     hashed_password = hashed_password.decode('utf-8')
 
