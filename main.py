@@ -36,6 +36,19 @@ def list_questions():
     return render_template('list_questions.html', questions=questions_list, tags=tags)
 
 
+@app.route('/user/<user_id>')
+def show_user_data():
+    #TODO: Make table for every single user that contains the asked questions, answers (and comments)
+    user_data = {
+        id = session['id'],
+        username = session['username'],
+        email = session['email'],
+        count_questions = data_manager.collect_data_of_user(user_id=id, table_name="question"),
+        count_answers = data_manager.collect_data_of_user(user_id=id, table_name="answer"),
+        reputation = session['reputation']
+    }
+    return render_template('user.html', data=user_data)
+
 @app.route('/question/<question_id>')
 def display_question(question_id):
     """Routes to the specific ID of the selected question displaying corresponding answers"""
@@ -53,6 +66,7 @@ def add_answer(question_id):
     if request.method == 'GET':
         return render_template('add_answer.html')
     else:
+        user_id = escape(session['id'])
         message = request.form.get('input_message')
         picture = request.form.get('input_image_url')
 
@@ -61,6 +75,7 @@ def add_answer(question_id):
         data_manager.add_answer(
             {
                 'question_id': question_id,
+                'user_id': user_id,
                 'message': message,
                 'image': picture
             }
@@ -156,7 +171,7 @@ def vote_question(question_id, action):
 
 
 @app.route('/answer/<answer_id>/<action>')
-# <action>: 'vote_up' or 'vote_down'
+# <action>: 'vote_up' or 'vote_down' or 'accept'
 def vote_answer(answer_id, action):
     if action == "vote_up" or action == "vote_down":
         data_manager.update_reputation("answer", escape(username=session['username']), action)

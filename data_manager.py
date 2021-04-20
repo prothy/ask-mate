@@ -129,7 +129,7 @@ def add_answer(cursor: RealDictCursor, values):
     submission_time = datetime.datetime.now().isoformat(' ', 'seconds')
     query = f"""
         INSERT INTO answer(submission_time, vote_number, question_id, message, image)
-        VALUES ('{submission_time}', 0, {values['question_id']}, '{values['message']}', '{values['image']}')
+        VALUES ('{submission_time}', 0, {values['question_id']}, '{values['message']}', '{values['image']}', '{values['user_id']}')
     """
     cursor.execute(query)
 
@@ -140,12 +140,12 @@ def add_question(cursor: RealDictCursor, values):
     if "image" in values.keys():
         query = f"""
             INSERT INTO question(submission_time, view_number, vote_number, title, message, image)
-            VALUES ('{submission_time}', 0, 0, '{values['title']}', '{values['message']}', '{values["image"]}', NONE)
+            VALUES ('{submission_time}', 0, 0, '{values['title']}', '{values['message']}', '{values["image"]}', NONE, '{values['user_id']}')
         """
     else:
         query = f"""
             INSERT INTO question(submission_time, view_number, vote_number, title, message, image)
-            VALUES ('{submission_time}', 0, 0, '{values['title']}', '{values['message']}', NULL)
+            VALUES ('{submission_time}', 0, 0, '{values['title']}', '{values['message']}', NULL, NONE, '{values['user_id']}')
         """
     cursor.execute(query)
 
@@ -243,10 +243,21 @@ def login(cursor: RealDictCursor, values):
                 WHERE username LIKE '{values['username']}'
                 """
 
-    result = cursor.execute(query)
-    return verify_password(values['password'], result.fetchall()[0])
+    cursor.execute(query)
+    return verify_password(values['password'], cursor.fetchall()[0])
 
-
+@database_common.connection_handler
 def verify_password(plain_text_password, hashed_password):
     hashed_bytes_password = hashed_password.encode('utf-8')
     return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_bytes_password)
+
+@database_common.connection_handler
+def collect_data_of_user(cursor: RealDictCursor, user_id, table_name):
+    query = f"""
+                SELECT COUNT(*)
+                FROM {table_name}
+                WHERE user_id = {user_id}
+                """
+
+    cursor.execute(query)
+    return cursor.fetchall()

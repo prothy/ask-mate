@@ -25,7 +25,8 @@ CREATE TABLE question (
     title text,
     message text,
     image text,
-    accepted text
+    accepted text,
+    user_id integer
 );
 
 DROP TABLE IF EXISTS public.answer;
@@ -35,8 +36,8 @@ CREATE TABLE answer (
     vote_number integer,
     question_id integer,
     message text,
-    image text
-    --, username text --(just put it here, because it will be necessary later, but this part is not implemented yet)
+    image text,
+    user_id integer
 );
 
 DROP TABLE IF EXISTS public.comment;
@@ -44,6 +45,7 @@ CREATE TABLE comment (
     id serial NOT NULL,
     question_id integer,
     answer_id integer,
+    user_id integer,
     message text,
     submission_time timestamp without time zone,
     edited_count integer
