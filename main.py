@@ -3,6 +3,7 @@ from werkzeug.utils import secure_filename
 import data_manager
 import os
 
+
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = "static/user-upload/"
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -173,7 +174,7 @@ def list_matching():
 
 @app.route('/registration', methods=['POST', 'GET'])
 def registration():
-    if flask.request.method == 'GET':
+    if request.method == 'GET':
         return render_template('registration.html')
     else:
         username = request.form.get('username')
@@ -193,7 +194,7 @@ def registration():
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
-    if flask.request.method == 'GET':
+    if request.method == 'GET':
         return render_template('login.html', message='')
     else:
         username = request.form.get('username')

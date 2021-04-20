@@ -1,9 +1,16 @@
-import bcrypt as bcrypt
+import bcrypt
 from psycopg2.extras import RealDictCursor
+
+from flask_wtf import FlaskForm
+from wtforms import StringField
+from wtforms.validators import DataRequired
 
 import database_common
 import datetime
 
+
+class MyForm(FlaskForm):
+    name = StringField('name', validators=[DataRequired()])
 
 @database_common.connection_handler
 def sort_questions(cursor: RealDictCursor, order_by, order_direction):
@@ -186,11 +193,11 @@ def login(cursor: RealDictCursor, values):
     query = f"""
                 SELECT password
                 FROM users
-                WHERE '{username}' LIKE '{values[username]}'
+                WHERE username LIKE '{values['username']}'
                 """
 
     result = cursor.execute(query)
-    return verify_password(values[password], result.fetchall()[0])
+    return verify_password(values['password'], result.fetchall()[0])
 
 def verify_password(plain_text_password, hashed_password):
     hashed_bytes_password = hashed_password.encode('utf-8')
