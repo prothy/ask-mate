@@ -15,7 +15,7 @@
             <li>
                 <a href="{{ url_for('list_questions') }}">Home</a>
             </li>
-            {% if not logged_in: %}
+            {% if not logged_in %}
                 <li>
                     <a href="{{ url_for('login') }}">Login</a>
                 </li>
