@@ -1,7 +1,7 @@
 import os
 
-from flask import Flask, request, redirect, render_template, url_for, flash
-from werkzeug.utils import secure_filename
+from flask import Flask, request, redirect, render_template, url_for, flash, session
+from werkzeug.utils import secure_filename, escape
 
 import data_manager
 from form import RegistrationForm, LoginForm
@@ -145,13 +145,15 @@ def edit_q_and_a(edit_type, q_and_a_id):
 
             return redirect(url_for("display_question", question_id=question_id))
 
+
 @app.route('/question/<question_id>/<action>')
 # <action>: 'vote_up' or 'vote_down'
 def vote_question(question_id, action):
     if action == "vote_up" or action == "vote_down":
-        data_manager.update_reputation("question", username=session['username'] , action)
+        data_manager.update_reputation(vote_type="question", username=session['username'], vote_action=action)
         data_manager.update_votes("question", question_id, action)
         return redirect(request.referrer)
+
 
 @app.route('/answer/<answer_id>/<action>')
 # <action>: 'vote_up' or 'vote_down'
@@ -162,7 +164,7 @@ def vote_answer(answer_id, action):
         return redirect(request.referrer)
     elif action == "accept":
         data_manager.update_reputation("answer", escape(username=session['username']), action)
-        data_manger.update_accepted(answer_id=answer_id)
+        data_manager.update_accepted(answer_id=answer_id)
         return redirect(request.referrer)
 
 
