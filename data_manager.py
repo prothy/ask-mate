@@ -9,8 +9,11 @@ import datetime
 def sort_questions(cursor: RealDictCursor, order_by, order_direction):
     """Sorts questions by the given criteria, defaults to submission time"""
     query = f"""
-        SELECT *
-        FROM question
+        SELECT submission_time, view_number, vote_number, title, message, image, array_agg(name) tags
+        FROM question q
+        INNER JOIN question_tag qt ON q.id = qt.question_id
+        INNER JOIN tag t ON t.id = qt.tag_id
+        GROUP BY q.id
         ORDER BY {order_by} {order_direction}
     """
     cursor.execute(query)
