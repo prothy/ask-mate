@@ -153,13 +153,6 @@ def vote_question(question_id, action):
         data_manager.update_votes("question", question_id, action)
         return redirect(request.referrer)
 
-
-"""
-accept answer gombot megcsinálni
-question táblázatban + column "accepted_asnwer_id" (vagy csak "accepted")
-a bele mentett id-t publikáló user-nek a reputation-je megnő
-"""
-
 @app.route('/answer/<answer_id>/<action>')
 # <action>: 'vote_up' or 'vote_down'
 def vote_answer(answer_id, action):
@@ -169,6 +162,7 @@ def vote_answer(answer_id, action):
         return redirect(request.referrer)
     elif action == "accept":
         data_manager.update_reputation("answer", escape(username=session['username']), action)
+        data_manger.update_accepted(answer_id=answer_id)
         return redirect(request.referrer)
 
 

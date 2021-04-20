@@ -85,11 +85,27 @@ def update_reputation(cursor: RealDictCursor, vote_type: str, username: str, vot
         calc_reputation = "reputation - 2"
 
     query = f"""
-        UPDATE {users}
+        UPDATE users
         SET reputation = {calc_reputation}
         WHERE username = {username}
     """
     cursor.execute(query)
+
+def update_accepted(answer_id):
+    find_question_id = f"""
+    SELECT question_id
+    FROM answer
+    WHERE id = {answer_id}
+    """
+    cursor.execute(find_question_id)
+    question_id = cursor.fetchall()
+
+    update_question = f"""
+        UPDATE question
+        SET accepted = {answer_id}
+        WHERE id = {question_id}
+    """
+    cursor.execute(update_question)
 
 
 @database_common.connection_handler
@@ -119,7 +135,7 @@ def add_question(cursor: RealDictCursor, values):
     if "image" in values.keys():
         query = f"""
             INSERT INTO question(submission_time, view_number, vote_number, title, message, image)
-            VALUES ('{submission_time}', 0, 0, '{values['title']}', '{values['message']}', '{values["image"]}')
+            VALUES ('{submission_time}', 0, 0, '{values['title']}', '{values['message']}', '{values["image"]}', NONE)
         """
     else:
         query = f"""
