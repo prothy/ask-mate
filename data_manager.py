@@ -1,8 +1,8 @@
+import bcrypt as bcrypt
 from psycopg2.extras import RealDictCursor
 
 import database_common
 import datetime
-import bycript
 
 
 @database_common.connection_handler
