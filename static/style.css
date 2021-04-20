@@ -90,10 +90,6 @@ header input[type="text"] {
     margin-bottom: 3rem;
 }
 
-.content select:first-of-type {
-    margin-left: 0.5rem;
-}
-
 .content select, .content input {
     height: 2rem;
     padding: 0 0.5rem;

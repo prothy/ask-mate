@@ -1,4 +1,11 @@
-.tag
+.top-bar {
+    margin-left: 0.5em;
+    padding: 0 0.5rem;
+}
+
+.top-bar div {
+    margin: 0.2em 0;
+}
 
 /* QUESTION DIVS */
 
