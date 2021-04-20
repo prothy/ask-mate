@@ -1,14 +1,18 @@
-from flask import Flask, request, redirect, render_template, url_for, abort
-from werkzeug.utils import secure_filename
-import data_manager
 import os
 
+from flask import Flask, request, redirect, render_template, url_for, flash
+from werkzeug.utils import secure_filename
+
+import data_manager
+from form import RegistrationForm
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = "static/user-upload/"
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
+
+app.config['SECRET_KEY'] = '406d389c74e700a2a35307d872bb618e'
 
 # Evaluate UPLOAD_FOLDER relative to the current Flask App's execution directory
 app.config['UPLOAD_FOLDER'] = os.path.join(APP_ROOT, UPLOAD_FOLDER)
@@ -59,7 +63,7 @@ def add_answer(question_id):
                 'question_id': question_id,
                 'message': message,
                 'image': picture
-             }
+            }
         )
         return redirect(url_for("display_question", question_id=question_id))
 
@@ -167,32 +171,23 @@ def list_matching():
     questions, answers = data_manager.search_table(search_query)
     for question in questions:
         question["message"] = question["message"].replace('"', "'")
-        question["message"] = "<p>" + question["message"].replace(search_query, f"<span class='search-query'>{search_query}</span>") + "</p>"
+        question["message"] = "<p>" + question["message"].replace(search_query,
+                                                                  f"<span class='search-query'>{search_query}</span>") + "</p>"
     for answer in answers:
         answer["message"] = answer["message"].replace('"', "'")
-        answer["message"] = "<p>" + answer["message"].replace(search_query, f"<span class='search-query'>{search_query}</span>") + "</p>"
+        answer["message"] = "<p>" + answer["message"].replace(search_query,
+                                                              f"<span class='search-query'>{search_query}</span>") + "</p>"
 
     return render_template('search_results.html', questions=questions, answers=answers)
 
 
-@app.route('/registration', methods=['POST', 'GET'])
-def registration():
-    if request.method == 'GET':
-        return render_template('registration.html')
-    else:
-        username = request.form.get('username')
-        email = request.form.get('email')
-        password = request.form.get('password')
-
-        data_manager.registrate_user(
-            {
-                'username': username,
-                'email': email,
-                'password':password
-            }
-        )
-
-        return render_template('/')
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        flash(f"Account created for {form.username.data}!", 'success')
+        return redirect(url_for('list_questions'))
+    return render_template("register.html", title='Register', form=form)
 
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -206,6 +201,7 @@ def login():
             return render_template('/')
         else:
             return render_template('login.html', message='Invalid password or username. Please try again!')
+
 
 if __name__ == '__main__':
     app.run(
