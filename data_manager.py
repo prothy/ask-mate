@@ -71,6 +71,42 @@ def update_votes(cursor: RealDictCursor, vote_type: str, item_id: int, vote_acti
     """
     cursor.execute(query)
 
+def update_reputation(cursor: RealDictCursor, vote_type: str, username: str, vote_action: str):
+    calc_reputation = "reputation"
+    if vote_action == "vote_up":
+        if vote_type == "question":
+            calc_reputation = "reputation + 5"
+        else:
+            calc_reputation = "reputation + 10"
+    #TODO: Make option: Accept answer (this function works without it)
+    elif vote_action == "accepted":
+        calc_reputation = "reputation + 15"
+    else:
+        calc_reputation = "reputation - 2"
+
+    query = f"""
+        UPDATE users
+        SET reputation = {calc_reputation}
+        WHERE username = {username}
+    """
+    cursor.execute(query)
+
+def update_accepted(answer_id):
+    find_question_id = f"""
+    SELECT question_id
+    FROM answer
+    WHERE id = {answer_id}
+    """
+    cursor.execute(find_question_id)
+    question_id = cursor.fetchall()
+
+    update_question = f"""
+        UPDATE question
+        SET accepted = {answer_id}
+        WHERE id = {question_id}
+    """
+    cursor.execute(update_question)
+
 
 @database_common.connection_handler
 def update_view_count(cursor: RealDictCursor, question_id):
@@ -99,7 +135,7 @@ def add_question(cursor: RealDictCursor, values):
     if "image" in values.keys():
         query = f"""
             INSERT INTO question(submission_time, view_number, vote_number, title, message, image)
-            VALUES ('{submission_time}', 0, 0, '{values['title']}', '{values['message']}', '{values["image"]}')
+            VALUES ('{submission_time}', 0, 0, '{values['title']}', '{values['message']}', '{values["image"]}', NONE)
         """
     else:
         query = f"""
