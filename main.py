@@ -4,7 +4,7 @@ from flask import Flask, request, redirect, render_template, url_for, flash
 from werkzeug.utils import secure_filename
 
 import data_manager
-from form import RegistrationForm
+from form import RegistrationForm, LoginForm
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = "static/user-upload/"
@@ -184,23 +184,37 @@ def list_matching():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
+    # data_manager.register_user()
     if form.validate_on_submit():
         flash(f"Account created for {form.username.data}!", 'success')
         return redirect(url_for('list_questions'))
     return render_template("register.html", title='Register', form=form)
 
 
-@app.route('/login', methods=['POST', 'GET'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'GET':
-        return render_template('login.html', message='')
-    else:
-        username = request.form.get('username')
-        password = request.form.get('password')
-        if data_manager.login(username=username, password=password):
-            return render_template('/')
+    form = LoginForm()
+    if form.validate_on_submit():
+        if form.email.data == 'admin@admin.com' and form.password.data == 'admin':
+            flash('You have been logged in!', 'success')
+            return redirect(url_for('list_questions'))
         else:
-            return render_template('login.html', message='Invalid password or username. Please try again!')
+            flash('Login unsuccessful. Please check username and password.', 'danger')
+    return render_template("login.html", title='Login', form=form)
+    # if request.method == 'GET':
+    #     return render_template('login.html', message='')
+    # else:
+    #     username = request.form.get('username')
+    #     password = request.form.get('password')
+    #     if data_manager.login(username=username, password=password):
+    #         return render_template('/')
+    #     else:
+    #         return render_template('login.html', message='Invalid password or username. Please try again!')
+
+
+@app.route("/logout")
+def logout():
+    pass
 
 
 if __name__ == '__main__':
