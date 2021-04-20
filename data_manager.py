@@ -71,6 +71,8 @@ def update_votes(cursor: RealDictCursor, vote_type: str, item_id: int, vote_acti
     """
     cursor.execute(query)
 
+
+@database_common.connection_handler
 def update_reputation(cursor: RealDictCursor, vote_type: str, username: str, vote_action: str):
     calc_reputation = "reputation"
     if vote_action == "vote_up":
@@ -91,6 +93,8 @@ def update_reputation(cursor: RealDictCursor, vote_type: str, username: str, vot
     """
     cursor.execute(query)
 
+
+@database_common.connection_handler
 def update_accepted(answer_id):
     find_question_id = f"""
     SELECT question_id
