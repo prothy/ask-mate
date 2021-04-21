@@ -4,7 +4,21 @@
         <form method="POST" action="">
             {{ form.hidden_tag() }}
             <fieldset>
-                <legend>Log In</legend>
+                <legend>Register your account</legend>
+                <div>
+                    {#Username field#}
+                    {{ form.username.label }}
+                    {% if form.username.errors %}
+                        {{ form.username }}
+                        <div>
+                            {% for error in form.username.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.username }}
+                    {% endif %}
+                </div>
                 <div>
                     {#Email field#}
                     {{ form.email.label }}
@@ -34,21 +48,27 @@
                     {% endif %}
                 </div>
                 <div>
-                    {{ form.remember() }}
-                    {{ form.remember.label }}
+                    {{ form.confirm_password.label }}
+                    {% if form.confirm_password.errors %}
+                        {{ form.confirm_password }}
+                        <div>
+                            {% for error in form.confirm_password.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.confirm_password }}
+                    {% endif %}
                 </div>
             </fieldset>
             <div>
                 {{ form.submit }}
             </div>
-            <small>
-                <a href="#">Forgot your password?</a> <!-- Missing url_for - later -->
-            </small>
         </form>
     </div>
     <div>
         <small>
-            Do you need an account? <a href="{{ url_for('register') }}">Sign Up</a>
+            Already have an account? <a href="{{ url_for('login') }}">Sign In</a>
         </small>
     </div>
 {% endblock content %}
