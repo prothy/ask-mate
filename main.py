@@ -3,7 +3,7 @@ import os
 from flask import Flask, request, redirect, render_template, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename, escape
-from models import User, Post
+# from models import User, Post
 
 import data_manager
 from form import RegistrationForm, LoginForm
@@ -27,13 +27,16 @@ def list_questions():
     """INITIAL: Lists the questions by order"""
     sort = request.args.get("sort") if request.args.get("sort") else "submission_time"
     order = request.args.get("order") if request.args.get("order") else "desc"
-    tag = request.args.get("tags") if request.args.get("tags") else "%"
-
-    questions_list = data_manager.sort_questions(sort, order, tag)
-    for question in questions_list:
-        question["message"] = question["message"].replace('"', "'")
 
     tags = data_manager.get_tags()
+    tag_list = []
+
+    for t in tags:
+        tag_list.append(t['name'])
+
+    questions_list = data_manager.sort_questions(sort, order, tag_list)
+    for question in questions_list:
+        question["message"] = question["message"].replace('"', "'")
 
     return render_template('list_questions.html', questions=questions_list, tags=tags)
 

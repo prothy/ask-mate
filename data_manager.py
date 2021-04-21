@@ -23,9 +23,9 @@ def sort_questions(cursor: RealDictCursor, order_by, order_direction, tag_list):
             INNER JOIN tag t ON t.id = qt.tag_id
             GROUP BY q.id
         ) tab
-        WHERE tags @> '{{{tag_list}}}'
+        WHERE tags && %s
     """
-    cursor.execute(query)
+    cursor.execute(query, (tag_list, ))
     return cursor.fetchall()
 
 
