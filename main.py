@@ -27,11 +27,13 @@ def list_questions():
     """INITIAL: Lists the questions by order"""
     sort = request.args.get("sort") if request.args.get("sort") else "submission_time"
     order = request.args.get("order") if request.args.get("order") else "desc"
+    tags_get = request.args.getlist("tag")
 
     tags = data_manager.get_tags()
+
     tag_list = []
 
-    for t in tags:
+    for t in data_manager.get_tags():
         tag_list.append(t['name'])
 
     questions_list = data_manager.sort_questions(sort, order, tag_list)
