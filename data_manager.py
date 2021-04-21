@@ -7,12 +7,12 @@ import database_common
 
 
 @database_common.connection_handler
-def sort_questions(cursor: RealDictCursor, order_by, order_direction, tag_list):
+def sort_questions(cursor: RealDictCursor, order_by: str, order_direction: str, tag_list: list):
     """Sorts questions by the given criteria, defaults to submission time
     Args:
         order_by: Any column in question and tag table
         order_direction: 'asc' or 'desc'
-        tag_list: Any tag
+        tag_list: List of tags that will be filtered
     """
     query = f"""
         SELECT *
@@ -22,8 +22,9 @@ def sort_questions(cursor: RealDictCursor, order_by, order_direction, tag_list):
             INNER JOIN question_tag qt ON q.id = qt.question_id
             INNER JOIN tag t ON t.id = qt.tag_id
             GROUP BY q.id
+            ORDER BY {order_by} {order_direction}
         ) tab
-        WHERE tags && %s
+        WHERE NOT tags && %s
     """
     cursor.execute(query, (tag_list, ))
     return cursor.fetchall()
