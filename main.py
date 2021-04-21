@@ -22,8 +22,9 @@ def list_questions():
     """INITIAL: Lists the questions by order"""
     sort = request.args.get("sort") if request.args.get("sort") else "submission_time"
     order = request.args.get("order") if request.args.get("order") else "desc"
+    tag = request.args.get("tags") if request.args.get("tags") else "%"
 
-    questions_list = data_manager.sort_questions(sort, order)
+    questions_list = data_manager.sort_questions(sort, order, tag)
     for question in questions_list:
         question["message"] = question["message"].replace('"', "'")
 
