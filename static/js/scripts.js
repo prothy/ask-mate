@@ -1,19 +1,22 @@
-const sort = document.querySelectorAll('.sort-select');
-const sortBtn = document.querySelector('#sort-button');
-const tag = document.querySelectorAll('.tag-list.tag')
+let sort = document.querySelectorAll('.sort-select');
+let sortBtn = document.querySelector('#sort-button');
+let tags = document.querySelectorAll('.tag-list .tag')
 const url = window.location.href;
 
 let getParamsStr = url.split("/").slice(3).join()  // removes 'http' and domain
     .split(/&|\?/).slice(1);
 let getParams = getParamsStr.map((e) => e.split("=")); // splits parameters into key-value pairs
 
+tags.forEach((element) => {
+    if (getParams.filter((e) => e.includes(element.name)).length) {
+        element.classList.add('unselect');
+    }
+})
 
 // event listener for sort buttons
 sortBtn.addEventListener('click', () => {
     let hrefString = ""
     let activeSort = []; //list of all selected sorting options
-
-    console.log(getParamsStr)
 
     for (let i = 0; i < sort.length; i++) {
         if (sort[i].value) {
@@ -21,7 +24,7 @@ sortBtn.addEventListener('click', () => {
         }
     }
 
-    // replaces 'sort' and 'order' values by filtering each first, then readding them
+    // replaces 'sort' and 'order' values by filtering each first, then adding them again
     for (let i = 0; i < activeSort.length; i++) {
         getParams = getParams.filter((e) => !e.includes(activeSort[i].name));
         getParams.push([activeSort[i].name, activeSort[i].value]);
@@ -48,17 +51,11 @@ function filterSelectedTag(target) {
     const tag_in_request = getParams.filter((e) => e.includes(target.name)).length
     const elementParam = ['tag', target.name]
 
-    console.log(target.classList)
-
     if (tag_in_request) {
         getParams.splice(getParams.indexOf(elementParam), 1);
-        target.classList.add('unselect');
     } else {
         getParams.push(elementParam);
-        target.classList.remove('unselect')
     }
-
-    console.log('after', getParams)
 
     if (getParams.length) {
         getParamsStr = getParams.map((e) => e.join('='));
