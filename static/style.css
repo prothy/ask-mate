@@ -214,3 +214,49 @@ header input[type="text"] {
     border-color: #e8e8e8;
     color: #ccc;
 }
+
+.form-container {
+    width: 50%;
+    margin: 24px auto 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-container > * {
+        margin: 0 auto;
+}
+
+.form-container__element {
+    width: 100%;
+
+    display: flex;
+    padding: 10px;
+    align-items: baseline;
+    justify-content: flex-end;
+
+}
+
+.form-container__element > * {
+    margin: 0 5px;
+}
+
+.form-container__element--remember {
+    justify-content: center;
+    align-items: center;
+}
+
+.form-container__element--submit {
+        justify-content: center;
+    align-items: center;
+}
+
+.form-container__title {
+    text-align: center;
+    font-size: 24px;
+    margin: 24px 0;
+}
+
+fieldset {
+    border: none !important;
+}
