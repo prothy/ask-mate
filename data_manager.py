@@ -218,3 +218,47 @@ def login(cursor: RealDictCursor, values):
 def verify_password(plain_text_password, hashed_password):
     hashed_bytes_password = hashed_password.encode('utf-8')
     return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_bytes_password)
+
+
+@database_common.connection_handler
+def update_reputation(cursor: RealDictCursor, vote_type, user_id, vote_action):
+    if vote_action == "vote_up":
+        points = 5 if vote_type == "question" else 10
+    elif vote_action == "vote_down":
+        points = -2
+    else:
+        points = 15
+
+    query = f"""
+        UPDATE users
+        SET reputation = reputation + {points}
+        WHERE id = {user_id}
+    """
+    cursor.execute(query)
+
+
+@database_common.connection_handler
+def list_users(cursor: RealDictCursor):
+    query = f"""
+    SELECT id, username, reputation
+    FROM users
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+@database_common.connection_handler
+def collect_qa(cursor: RealDictCursor, user_id, table):
+    message = 'message' if table == "answer" else 'title'
+    question_id = "id" if table == "answer" else "question_id"
+
+    query = f"""
+    SELECT id, {message}, {question_id}
+    FROM {table}
+    WHERE user_id = {user_id}
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+@database_common.connection_handler
+def get_user_data(cursor: RealDictCursor):
+    pass

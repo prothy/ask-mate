@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+<table border="0" style="width:100%" bgcolor="#000000">
+  <tr bgcolor="#ffffff">
+      <th>Username</th>
+      <th>Email</th>
+      <th>Count of asked questions</th>
+      <th>Count of answers</th>
+      <th>Reputation</th>
+  </tr>
+  {% for user in users %}
+      <tr bgcolor="#ffffff">
+          <td><a href="/users/{{ user.id }}">{{ user.username }}</a></td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.count_questions }}</td>
+          <td>{{ user.count_answers }}</td>
+          <td>{{ user.reputation }}</td>
+      </tr>
+  {% endfor %}
+</table>
+</body>
+</html>

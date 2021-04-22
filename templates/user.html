@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+
+Username:  {{ user.username }}
+Email: {{ user.email }}
+Count of asked questions: {{ user.count_answers }}
+Count of answers: {{ user.count_answers }}
+Reputation: {{ user.reputation }}<br>
+
+<table border="0" bgcolor="#000000">
+    <caption>Questions of this user</caption>
+    <tr bgcolor="#ffffff">
+        <th max-width='20%'>Id</th>
+        <th>Title</th>
+    </tr>
+    {% for question in datas.questions %}
+    <tr bgcolor="#ffffff">
+        <td max-width='20%'>{{ question[0] }}</td>
+        <td><a href="/question/{{ question[0] }}>">{{ question[1] }}</a></td>
+    </tr>
+</table><br>
+
+<table border="0" bgcolor="#000000">
+    <caption>Answers of this user</caption>
+    <tr bgcolor="#ffffff">
+        <th max-width='20%'>Id</th>
+        <th>Message</th>
+    </tr>
+    {% for answer in datas.answers %}
+        <tr bgcolor="#ffffff">
+            <td max-width='20%'>{{ answer[0] }}</td>
+            <td><a href="/question/{{ answer[3] }}">{{ answer[1] }}</a></td>
+        </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>
