@@ -58,11 +58,13 @@ def add_answer(question_id):
     else:
         message = request.form.get('input_message')
         picture = request.form.get('input_image_url')
+        user_id = escape(session['id'])
 
         message = message.replace("'", '"')
 
         data_manager.add_answer(
             {
+                'user_id': user_id,
                 'question_id': question_id,
                 'message': message,
                 'image': picture
@@ -79,6 +81,7 @@ def add_question():
         title = request.form.get('input_title')
         message = request.form.get('input_message')
         message = message.replace("'", '"')
+        user_id = escape(session['id'])
 
         images = request.files.getlist('input_image')
         for image in images:
@@ -90,6 +93,7 @@ def add_question():
 
                 data_manager.add_question(
                     {
+                        'user_id': user_id,
                         'title': title,
                         'message': message,
                         'image': save_path
@@ -98,6 +102,7 @@ def add_question():
             else:
                 data_manager.add_question(
                     {
+                        'user_id': user_id,
                         'title': title,
                         'message': message
                     }
