@@ -167,11 +167,11 @@ def vote_question(question_id, action):
 # <action>: 'vote_up' or 'vote_down'
 def vote_answer(answer_id, action):
     if action == "vote_up" or action == "vote_down":
-        data_manager.update_reputation(vote_type="answer", user_id=escape(session['id']), action)
+        data_manager.update_reputation(vote_type="answer", user_id=escape(session['id']), vote_action=action)
         data_manager.update_votes("answer", answer_id, action)
         return redirect(request.referrer)
     elif action == "accept":
-        data_manager.update_reputation("answer", user_id=escape(session['id']), action)
+        data_manager.update_reputation("answer", user_id=escape(session['id']), vote_action=action)
         data_manager.update_accepted(answer_id=answer_id)
         return redirect(request.referrer)
 
