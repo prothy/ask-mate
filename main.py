@@ -87,7 +87,6 @@ app.config['UPLOAD_FOLDER'] = os.path.join(APP_ROOT, UPLOAD_FOLDER)
 @app.route('/')
 @app.route('/list')
 def list_questions():
-    print(current_user)
     """INITIAL: Lists the questions by order"""
     sort = request.args.get("sort") if request.args.get("sort") else "submission_time"
     order = request.args.get("order") if request.args.get("order") else "desc"
@@ -96,7 +95,6 @@ def list_questions():
     all_tags = data_manager.get_tags()
 
     questions_list = data_manager.sort_questions(sort, order, selected_tags)
-    print(questions_list)
 
     for question in questions_list:
         question["message"] = question["message"].replace('"', "'")
@@ -146,7 +144,7 @@ def add_question():
         title = request.form.get('input_title')
         message = request.form.get('input_message')
         message = message.replace("'", '"')
-        user_id = escape(session['id'])
+        user_id = data_manager.get_user_id(current_user.username)['id']
 
         images = request.files.getlist('input_image')
         for image in images:
