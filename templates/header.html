@@ -5,29 +5,22 @@
             <a href="/"><h1><i class="fas fa-laptop-code"></i> CodeOverflow</h1></a>
             <h3>(Press Ctrl + Shift + R)</h3>
         </span>
-        <span class="search-bar">
+            <span class="search-bar">
             <form action="/search" name="search">
                 <input type="text" name="search" placeholder="Search...">
                 <input type="submit" value="GO!" class="btn">
             </form>
         </span>
-        <ul>
-            <li>
-                <a href="{{ url_for('list_questions') }}">Home</a>
-            </li>
-            {% if not logged_in %}
-                <li>
+            <div>
+                {% if current_user.is_authenticated %}
+                    <span><a href="{{ url_for('list_questions') }}"><i class="fas fa-user-circle"></i>{{ current_user.username.title() }}</a></span>
+                    <br>
+                    <span><a href="{{ url_for('logout') }}">Logout</a></span>
+                {% else %}
                     <a href="{{ url_for('login') }}">Login</a>
-                </li>
-                <li>
                     <a href="{{ url_for('register') }}">Register</a>
-                </li>
-            {% else %}
-                <li>
-                    <a href="{{ url_for('logout') }}">Logout</a>
-                </li>
-            {% endif %}
-        </ul>
-    </div>
+                {% endif %}
+            </div>
+        </div>
     </nav>
 </header>
