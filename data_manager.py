@@ -248,11 +248,17 @@ def list_users(cursor: RealDictCursor):
 
 @database_common.connection_handler
 def collect_qa(cursor: RealDictCursor, user_id, table):
+    message = 'message' if table == "answer" else 'title'
+    question_id = "id" if table == "answer" else "question_id"
+
     query = f"""
-    SELECT id
+    SELECT id, {message}, {question_id}
     FROM {table}
     WHERE user_id = {user_id}
-    GROUP BY user_id
     """
     cursor.execute(query)
     return cursor.fetchall()
+
+@database_common.connection_handler
+def get_user_data(cursor: RealDictCursor):
+    pass

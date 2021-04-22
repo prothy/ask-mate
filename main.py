@@ -251,10 +251,30 @@ def list_users():
                 }
             )
 
-        return render_template('users_list', title='Users', form=form, users=users_dict)
+        return render_template('list_users.html', title='Users', form=form, users=users_dict)
     else:
         return redirect(request.referrer)
 
+
+@app.route('/user/<user_id>')
+def show_user_data():
+    user = data_manager.get_user_data()
+
+    questions = data_manager.collect_qa(user_id=user[0], table='question')
+    answers = data_manager.collect_qa(user_id=user[0], table='answer')
+
+    datas = {
+            'id': user[0],
+            'username': user[1],
+            'email': user[2],
+            'reputation': user[4],
+            'count_questions': len(questions),
+            'count_answers': len(answers),
+            'questions': questions,
+            'answers': answers
+        }
+
+    return render_template('user.html', title='Users', form=form, datas=datas)
 
 
 if __name__ == '__main__':

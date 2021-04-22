@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+
+<table>
+    <caption>User information</caption>
+  <tr>
+      <td>Username: </td>
+      <td>{{ user.username }}</td>
+  </tr>
+  <tr>
+      <td>Email: </td>
+      <td>{{ user.email }}</td>
+  </tr>
+  <tr>
+      <td>Count of asked questions: </td>
+      <td>{{ user.count_answers }}</td>
+  </tr>
+  <tr>
+      <td>Count of answers: </td>
+      <td>{{ user.count_answers }}</td>
+  </tr>
+  <tr>
+      <td>Reputation: </td>
+      <td>{{ user.reputation }}</td>
+  </tr>
+</table><br>
+
+
+<table>
+    <caption>Questions of this user</caption>
+    <tr>
+        <th>Id</th>
+        <th>Title</th>
+    </tr>
+    {% for question in datas.questions %}
+    <tr>
+        <td><a href="/question/{{ question[0] }}>">{{ question[0] }}</a></td>
+        <td>{{ question[1] }}</td>
+    </tr>
+</table>
+
+<table>
+    <caption>Answers of this user</caption>
+    <tr>
+        <th>Id</th>
+        <th>Message</th>
+    </tr>
+    {% for answer in datas.answers %}
+        <tr>
+            <td><a href="/question/{{ answer[3] }}">{{ answer[0] }}</a></td>
+            <td>{{ answer[1] }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>

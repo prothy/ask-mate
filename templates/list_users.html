@@ -15,12 +15,13 @@
   </tr>
   {% for user in users %}
       <tr>
-          <th><a href="/users/{{ user.id }}">{{ user.username }}</a></th>
-          <th>{{ user.email }}</th>
-          <th>{{ user.count_questions }}</th>
-          <th>{{ user.count_answers }}</th>
-          <th>{{ user.reputation }}</th>
+          <td><a href="/users/{{ user.id }}">{{ user.username }}</a></td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.count_questions }}</td>
+          <td>{{ user.count_answers }}</td>
+          <td>{{ user.reputation }}</td>
       </tr>
   {% endfor %}
+</table>
 </body>
 </html>
