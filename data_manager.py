@@ -222,7 +222,7 @@ def verify_password(plain_text_password, hashed_password):
 
 
 @database_common.connection_handler
-def update_reputation(cursor: RealDictCursor, vote_type, user_id, vote_action):
+def update_reputation(cursor: RealDictCursor, vote_type, id, vote_action):
     if vote_action == "vote_up":
         points = 5 if vote_type == "question" else 10
     elif vote_action == "vote_down":
@@ -233,8 +233,21 @@ def update_reputation(cursor: RealDictCursor, vote_type, user_id, vote_action):
     query = f"""
         UPDATE users
         SET reputation = reputation + {points}
-        WHERE id = {user_id}
+        FROM {vote_type}
+        WHERE {vote_type}.id = {id}
     """
+    cursor.execute(query)
+
+
+@database_common.connection_handler
+def update_accepted(cursor: RealDictCursor, answer_id):
+    query = f"""
+    UPDATE question
+    SET accepted = {answer_id}
+    FROM answer
+    WHERE answer.id = {answer_id}
+    AND answer.question_id = question.id"""
+
     cursor.execute(query)
 
 
@@ -282,3 +295,15 @@ def get_user_data(cursor: RealDictCursor, user_id):
 
     cursor.execute(query)
     return cursor.fetchone()
+
+
+@database_common.connection_handler
+def get_user_id(cursor: RealDictCursor, username: str):
+    query = f"""
+    SELECT id
+    FROM users
+    WHERE username LIKE '{username}'"""
+
+    cursor.execute(query)
+    return cursor.fetchone()
+

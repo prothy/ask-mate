@@ -11,9 +11,9 @@
                 <input type="submit" value="GO!" class="btn">
             </form>
         </span>
-            <div>
+            <div class="user-info">
                 {% if current_user.is_authenticated %}
-                    <span><a href="{{ url_for('list_questions') }}"><i class="fas fa-user-circle"></i>{{ current_user.username.title() }}</a></span>
+                    <span><a href="{{ url_for('current_user_data') }}"><i class="fas fa-user-circle"></i>{{ current_user.username.title() }}</a></span>
                     <br>
                     <span><a href="{{ url_for('logout') }}">Logout</a></span>
                 {% else %}

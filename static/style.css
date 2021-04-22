@@ -170,9 +170,17 @@ header input[type="text"] {
     margin-bottom: 10px;
 }
 
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+
+.fas.fa-user-circle {
+    margin-right: 0.3em;
+}
+
 /* TAG SYLING */
-
-
 
 .tag {
     font-size: 8pt;

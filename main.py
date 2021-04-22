@@ -87,6 +87,7 @@ app.config['UPLOAD_FOLDER'] = os.path.join(APP_ROOT, UPLOAD_FOLDER)
 @app.route('/')
 @app.route('/list')
 def list_questions():
+    print(current_user)
     """INITIAL: Lists the questions by order"""
     sort = request.args.get("sort") if request.args.get("sort") else "submission_time"
     order = request.args.get("order") if request.args.get("order") else "desc"
@@ -222,22 +223,23 @@ def edit_q_and_a(edit_type, q_and_a_id):
 # <action>: 'vote_up' or 'vote_down'
 def vote_question(question_id, action):
     if action == "vote_up" or action == "vote_down":
-        data_manager.update_reputation(vote_type="question", user_id=escape(session['id']), vote_action=action)
+        data_manager.update_reputation(vote_type="question", id=question_id, vote_action=action)
         data_manager.update_votes("question", question_id, action)
-        return redirect(request.referrer)
+    return redirect(request.referrer)
 
 
 @app.route('/answer/<answer_id>/<action>')
 # <action>: 'vote_up' or 'vote_down'
 def vote_answer(answer_id, action):
     if action == "vote_up" or action == "vote_down":
-        data_manager.update_reputation(vote_type="answer", user_id=escape(session['id']), vote_action=action)
+        data_manager.update_reputation(vote_type="answer", id=answer_id, vote_action=action)
         data_manager.update_votes("answer", answer_id, action)
-        return redirect(request.referrer)
+
     elif action == "accept":
-        data_manager.update_reputation("answer", user_id=escape(session['id']), vote_action=action)
+        data_manager.update_reputation("answer", id=answer_id, vote_action=action)
         data_manager.update_accepted(answer_id=answer_id)
-        return redirect(request.referrer)
+
+    return redirect(request.referrer)
 
 
 @app.route('/search')
@@ -322,6 +324,18 @@ def list_users():
         return redirect(request.referrer)
 
 
+@app.route('/user')
+def current_user_data():
+    user = current_user.username
+
+    user_id = data_manager.get_user_id(user)['id']
+
+    questions = data_manager.get_questions_for_user(user_id)
+    print(user)
+
+    return render_template('user.html', user=user, questions=questions)
+
+
 @app.route('/user/<user_id>')
 def show_user_data(user_id):
     user = data_manager.get_user_data(user_id)
@@ -331,18 +345,18 @@ def show_user_data(user_id):
 
     questions = data_manager.get_questions_for_user(user_id)
 
-    # datas = {
-    #     'id': user[0],
-    #     'username': user[1],
-    #     'email': user[2],
-    #     'reputation': user[4],
-    #     'count_questions': len(questions),
-    #     'count_answers': len(answers),
-    #     'questions': questions,
-    #     'answers': answers
-    # }
+    datas = {
+        'id': user[0],
+        'username': user[1],
+        'email': user[2],
+        'reputation': user[4],
+        'count_questions': len(questions),
+        'count_answers': len(answers),
+        'questions': questions,
+        'answers': answers
+    }
 
-    return render_template('user.html', user=user, questions=questions)#title='Users', form=form, datas=datas)
+    return render_template('user.html', user=user['username'], questions=questions)#title='Users', form=form, datas=datas)
 
 
 if __name__ == '__main__':
