@@ -1,25 +1,86 @@
 import os
 
+from flask_bcrypt import Bcrypt
 from flask import Flask, request, redirect, render_template, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.ext.automap import automap_base
+from flask_login import LoginManager, login_user, current_user, logout_user, login_required, UserMixin
 from werkzeug.utils import secure_filename, escape
-# from models import User, Post
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
+# from sqlalchemy.ext.declarative import declarative_base
+
 
 import data_manager
-from form import RegistrationForm, LoginForm
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = "static/user-upload/"
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
+# App initialization parameters
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '406d389c74e700a2a35307d872bb618e'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://balazstoth:postgresmac@localhost:5432/askmate2'
 db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+login_manager.login_message_category = 'info'
+
+engine = create_engine('postgresql+psycopg2://balazstoth:postgresmac@localhost:5432/askmate2', convert_unicode=True)
+db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
+
+Base = automap_base()
+# Base = declarative_base()
+Base.query = db_session.query_property()
+
+
+class User(Base, UserMixin):
+    __tablename__ = 'users'
+
+
+Base.prepare(db.engine, reflect=True)
+# Users table class definition:
+# User = Base.classes.users
+
+
+class RegistrationForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Sign Up')
+
+    def validate_username(self, username):
+        user = User.query.filter_by(username=username.data).first()
+        if user:
+            raise ValidationError('That username is taken. Please choose a different one.')
+
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user:
+            raise ValidationError('That email is taken. Please choose a different one.')
+
+
+class LoginForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember = BooleanField('Remember Me')
+    submit = SubmitField('Login')
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
 
 # Evaluate UPLOAD_FOLDER relative to the current Flask App's execution directory
 app.config['UPLOAD_FOLDER'] = os.path.join(APP_ROOT, UPLOAD_FOLDER)
 
+# -------------------------------Routing Functions-----------------------------------
 
 @app.route('/')
 @app.route('/list')
@@ -195,40 +256,41 @@ def list_matching():
     return render_template('search_results.html', questions=questions, answers=answers)
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route("/register", methods=['GET', 'POST'])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     form = RegistrationForm()
-    # data_manager.register_user()
     if form.validate_on_submit():
-        flash(f"Account created for {form.username.data}!", 'success')
-        return redirect(url_for('list_questions'))
-    return render_template("register.html", title='Register', form=form)
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = User(username=form.username.data, email=form.email.data, password=hashed_password, reputation=0)
+        db.session.add(user)
+        db.session.commit()
+        flash('Your account has been created! You are now able to log in', 'success')
+        return redirect(url_for('login'))
+    return render_template('register.html', title='Register', form=form)
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route("/login", methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('list_questions'))
     form = LoginForm()
     if form.validate_on_submit():
-        if form.email.data == 'admin@admin.com' and form.password.data == 'admin':
-            flash('You have been logged in!', 'success')
-            return redirect(url_for('list_questions'))
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user, remember=form.remember.data)
+            next_page = request.args.get('next')
+            return redirect(next_page) if next_page else redirect(url_for('list_questions'))
         else:
-            flash('Login unsuccessful. Please check username and password.', 'danger')
-    return render_template("login.html", title='Login', form=form)
-    # if request.method == 'GET':
-    #     return render_template('login.html', message='')
-    # else:
-    #     username = request.form.get('username')
-    #     password = request.form.get('password')
-    #     if data_manager.login(username=username, password=password):
-    #         return render_template('/')
-    #     else:
-    #         return render_template('login.html', message='Invalid password or username. Please try again!')
+            flash('Login Unsuccessful. Please check email and password', 'danger')
+    return render_template('login.html', title='Login', form=form)
 
 
 @app.route("/logout")
 def logout():
-    pass
+    logout_user()
+    return redirect(url_for('list_questions'))
 
 
 if __name__ == '__main__':
