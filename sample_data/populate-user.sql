@@ -5,7 +5,7 @@ CREATE TABLE users (
     username varchar(20),
     email varchar(50),
     password char(60),
-    reputation bigint
+    reputation integer
 );
 
 INSERT INTO users

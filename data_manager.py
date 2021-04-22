@@ -219,6 +219,8 @@ def verify_password(plain_text_password, hashed_password):
     hashed_bytes_password = hashed_password.encode('utf-8')
     return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_bytes_password)
 
+
+@database_common.connection_handler
 def update_reputation(cursor: RealDictCursor, vote_type, user_id, vote_action):
     if vote_action == "vote_up":
         points = 5 if vote_type == "question" else 10
@@ -233,3 +235,24 @@ def update_reputation(cursor: RealDictCursor, vote_type, user_id, vote_action):
         WHERE id = {user_id}
     """
     cursor.execute(query)
+
+
+@database_common.connection_handler
+def list_users(cursor: RealDictCursor):
+    query = f"""
+    SELECT id, username, reputation
+    FROM users
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+@database_common.connection_handler
+def collect_qa(cursor: RealDictCursor, user_id, table):
+    query = f"""
+    SELECT id
+    FROM {table}
+    WHERE user_id = {user_id}
+    GROUP BY user_id
+    """
+    cursor.execute(query)
+    return cursor.fetchall()

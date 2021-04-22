@@ -230,6 +230,32 @@ def login():
 def logout():
     pass
 
+@app.route('/users')
+def list_users():
+    if session['username']:
+        list_of_users = data_manager.list_users()
+        users_dict = []
+
+        for user in list_of_users:
+            count_question = len(data_manager.collect_qa(user_id=user[0], table='question'))
+            count_answer = len(data_manager.collect_qa(user_id=user[0], table='answer'))
+
+            users_dict.append(
+                {
+                    'id': user[0],
+                    'username': user[1],
+                    'email': user[2],
+                    'reputation': user[4],
+                    'count_questions': count_question,
+                    'count_answers': count_answer
+                }
+            )
+
+        return render_template('users_list', title='Users', form=form, users=users_dict)
+    else:
+        return redirect(request.referrer)
+
+
 
 if __name__ == '__main__':
     app.run(
