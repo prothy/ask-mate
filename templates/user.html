@@ -1,3 +1,4 @@
+{#
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,4 +41,9 @@ Reputation: {{ user.reputation }}<br>
 </table>
 
 </body>
-</html>
+</html>#}
+
+{% extends 'base.html' %}
+{% block content %}
+    {{ user.username }}
+{% endblock %}

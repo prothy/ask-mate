@@ -246,6 +246,7 @@ def list_users(cursor: RealDictCursor):
     cursor.execute(query)
     return cursor.fetchall()
 
+
 @database_common.connection_handler
 def collect_qa(cursor: RealDictCursor, user_id, table):
     message = 'message' if table == "answer" else 'title'
@@ -259,6 +260,24 @@ def collect_qa(cursor: RealDictCursor, user_id, table):
     cursor.execute(query)
     return cursor.fetchall()
 
+
 @database_common.connection_handler
-def get_user_data(cursor: RealDictCursor):
-    pass
+def get_questions_for_user(cursor: RealDictCursor, user_id):
+    query = f"""
+    SELECT *
+    FROM question
+    WHERE user_id = {user_id}"""
+
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def get_user_data(cursor: RealDictCursor, user_id):
+    query = f"""
+    SELECT *
+    FROM users
+    WHERE id={user_id}"""
+
+    cursor.execute(query)
+    return cursor.fetchone()
