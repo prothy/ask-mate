@@ -218,3 +218,18 @@ def login(cursor: RealDictCursor, values):
 def verify_password(plain_text_password, hashed_password):
     hashed_bytes_password = hashed_password.encode('utf-8')
     return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_bytes_password)
+
+def update_reputation(cursor: RealDictCursor, vote_type, user_id, vote_action):
+    if vote_action == "vote_up":
+        points = 5 if vote_type == "question" else 10
+    elif vote_action == "vote_down":
+        points = -2
+    else:
+        points = 15
+
+    query = f"""
+        UPDATE users
+        SET reputation = reputation + {points}
+        WHERE id = {user_id}
+    """
+    cursor.execute(query)
