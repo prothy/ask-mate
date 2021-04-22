@@ -21,15 +21,17 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 # App initialization parameters
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '406d389c74e700a2a35307d872bb618e'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://balazstoth:postgresmac@localhost:5432/askmate2'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{os.environ.get("PSQL_USER_NAME")}:{os.environ.get("PSQL_PASSWORD")}@{os.environ.get("PSQL_HOST")}:5432/{os.environ.get("PSQL_DB_NAME")}'
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
-engine = create_engine('postgresql+psycopg2://balazstoth:postgresmac@localhost:5432/askmate2', convert_unicode=True)
+engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'], convert_unicode=True)
 db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
+
+print(engine)
 
 Base = automap_base()
 Base.query = db_session.query_property()
