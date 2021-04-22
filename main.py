@@ -31,6 +31,8 @@ login_manager.login_message_category = 'info'
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'], convert_unicode=True)
 db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
 
+print(engine)
+
 Base = automap_base()
 Base.query = db_session.query_property()
 
