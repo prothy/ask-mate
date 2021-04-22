@@ -17,11 +17,12 @@ def sort_questions(cursor: RealDictCursor, order_by: str, order_direction: str, 
     query = f"""
         SELECT *
         FROM (
-            SELECT q.id, submission_time, view_number, vote_number, title, message, image, array_agg(name) tags
+            SELECT q.id, submission_time, view_number, vote_number, title, message, image, array_agg(name) tags, username
             FROM question q
             INNER JOIN question_tag qt ON q.id = qt.question_id
             INNER JOIN tag t ON t.id = qt.tag_id
-            GROUP BY q.id
+            INNER JOIN users u on q.user_id = u.id
+            GROUP BY q.id, username
             ORDER BY {order_by} {order_direction}
         ) tab
         WHERE NOT tags && %s

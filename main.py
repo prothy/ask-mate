@@ -95,6 +95,7 @@ def list_questions():
     all_tags = data_manager.get_tags()
 
     questions_list = data_manager.sort_questions(sort, order, selected_tags)
+    print(questions_list)
 
     for question in questions_list:
         question["message"] = question["message"].replace('"', "'")
