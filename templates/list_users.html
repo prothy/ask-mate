@@ -5,8 +5,8 @@
     <title>{{ title }}</title>
 </head>
 <body>
-<table style="width:100%">
-  <tr>
+<table border="0" style="width:100%" bgcolor="#000000">
+  <tr bgcolor="#ffffff">
       <th>Username</th>
       <th>Email</th>
       <th>Count of asked questions</th>
@@ -14,7 +14,7 @@
       <th>Reputation</th>
   </tr>
   {% for user in users %}
-      <tr>
+      <tr bgcolor="#ffffff">
           <td><a href="/users/{{ user.id }}">{{ user.username }}</a></td>
           <td>{{ user.email }}</td>
           <td>{{ user.count_questions }}</td>

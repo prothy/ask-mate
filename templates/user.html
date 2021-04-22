@@ -6,54 +6,35 @@
 </head>
 <body>
 
-<table>
-    <caption>User information</caption>
-  <tr>
-      <td>Username: </td>
-      <td>{{ user.username }}</td>
-  </tr>
-  <tr>
-      <td>Email: </td>
-      <td>{{ user.email }}</td>
-  </tr>
-  <tr>
-      <td>Count of asked questions: </td>
-      <td>{{ user.count_answers }}</td>
-  </tr>
-  <tr>
-      <td>Count of answers: </td>
-      <td>{{ user.count_answers }}</td>
-  </tr>
-  <tr>
-      <td>Reputation: </td>
-      <td>{{ user.reputation }}</td>
-  </tr>
-</table><br>
+Username:  {{ user.username }}
+Email: {{ user.email }}
+Count of asked questions: {{ user.count_answers }}
+Count of answers: {{ user.count_answers }}
+Reputation: {{ user.reputation }}<br>
 
-
-<table>
+<table border="0" bgcolor="#000000">
     <caption>Questions of this user</caption>
-    <tr>
-        <th>Id</th>
+    <tr bgcolor="#ffffff">
+        <th max-width='20%'>Id</th>
         <th>Title</th>
     </tr>
     {% for question in datas.questions %}
-    <tr>
-        <td><a href="/question/{{ question[0] }}>">{{ question[0] }}</a></td>
-        <td>{{ question[1] }}</td>
+    <tr bgcolor="#ffffff">
+        <td max-width='20%'>{{ question[0] }}</td>
+        <td><a href="/question/{{ question[0] }}>">{{ question[1] }}</a></td>
     </tr>
-</table>
+</table><br>
 
-<table>
+<table border="0" bgcolor="#000000">
     <caption>Answers of this user</caption>
-    <tr>
-        <th>Id</th>
+    <tr bgcolor="#ffffff">
+        <th max-width='20%'>Id</th>
         <th>Message</th>
     </tr>
     {% for answer in datas.answers %}
-        <tr>
-            <td><a href="/question/{{ answer[3] }}">{{ answer[0] }}</a></td>
-            <td>{{ answer[1] }}</td>
+        <tr bgcolor="#ffffff">
+            <td max-width='20%'>{{ answer[0] }}</td>
+            <td><a href="/question/{{ answer[3] }}">{{ answer[1] }}</a></td>
         </tr>
     {% endfor %}
 </table>
