@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
-    <div>
+    <div class="form-container">
         <form method="POST" action="">
             {{ form.hidden_tag() }}
             <fieldset>
-                <legend>Log In</legend>
-                <div>
+                <legend class="form-container__title">Log In</legend>
+                <div class="form-container__element">
                     {#Email field#}
                     {{ form.email.label }}
                     {% if form.email.errors %}
@@ -19,7 +19,7 @@
                         {{ form.email }}
                     {% endif %}
                 </div>
-                <div>
+                <div class="form-container__element">
                     {#Password field#}
                     {{ form.password.label }}
                     {% if form.password.errors %}
@@ -33,20 +33,22 @@
                         {{ form.password }}
                     {% endif %}
                 </div>
-                <div>
+                <div class="form-container__element form-container__element--remember">
                     {{ form.remember() }}
                     {{ form.remember.label }}
                 </div>
             </fieldset>
-            <div>
+            <div class="form-container__element form-container__element--submit">
                 {{ form.submit }}
             </div>
-            <small>
-                <a href="#">Forgot your password?</a> <!-- Missing url_for - later -->
-            </small>
+            <div class="form-container__element form-container__element--submit">
+                <small>
+                    <a href="#">Forgot your password?</a> <!-- Missing url_for - later -->
+                </small>
+            </div>
         </form>
     </div>
-    <div>
+    <div class="form-container__element form-container__element--submit">
         <small>
             Do you need an account? <a href="{{ url_for('register') }}">Sign Up</a>
         </small>
