@@ -97,7 +97,7 @@ def add_answer(cursor: RealDictCursor, values):
     submission_time = datetime.datetime.now().isoformat(' ', 'seconds')
     query = f"""
         INSERT INTO answer(submission_time, vote_number, question_id, message, image)
-        VALUES ('{submission_time}', 0, {values['question_id']}, '{values['message']}', '{values['image']}')
+        VALUES ('{values['user_id']}', '{submission_time}', 0, {values['question_id']}, '{values['message']}', '{values['image']}')
     """
     cursor.execute(query)
 
@@ -108,7 +108,7 @@ def add_question(cursor: RealDictCursor, values):
     if "image" in values.keys():
         query = f"""
             INSERT INTO question(submission_time, view_number, vote_number, title, message, image)
-            VALUES ('{submission_time}', 0, 0, '{values['title']}', '{values['message']}', '{values["image"]}', NONE)
+            VALUES ('{values['user_id']}', '{submission_time}', 0, 0, '{values['title']}', '{values['message']}', '{values["image"]}', NONE)
         """
     else:
         query = f"""

@@ -26,7 +26,7 @@ CREATE TABLE question (
     title text,
     message text,
     image text,
-    accepted text
+    accepted integer
 );
 
 DROP TABLE IF EXISTS public.answer;
