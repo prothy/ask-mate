@@ -1,18 +1,16 @@
 import os
 
-from flask_bcrypt import Bcrypt
 from flask import Flask, request, redirect, render_template, url_for, flash, session
+from flask_bcrypt import Bcrypt
+from flask_login import LoginManager, login_user, current_user, logout_user, UserMixin
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.ext.automap import automap_base
-from flask_login import LoginManager, login_user, current_user, logout_user, login_required, UserMixin
-from werkzeug.utils import secure_filename, escape
 from flask_wtf import FlaskForm
+from sqlalchemy import create_engine
+from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.orm import scoped_session, sessionmaker
+from werkzeug.utils import secure_filename, escape
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
-# from sqlalchemy.ext.declarative import declarative_base
-
 
 import data_manager
 
@@ -34,7 +32,6 @@ engine = create_engine('postgresql+psycopg2://balazstoth:postgresmac@localhost:5
 db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
 
 Base = automap_base()
-# Base = declarative_base()
 Base.query = db_session.query_property()
 
 
@@ -43,8 +40,9 @@ class User(Base, UserMixin):
 
 
 Base.prepare(db.engine, reflect=True)
-# Users table class definition:
-# User = Base.classes.users
+
+
+# -------------------------------Registration and Login Class Definition-----------------------------------
 
 
 class RegistrationForm(FlaskForm):
@@ -72,6 +70,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 
+# Login manager by ID
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -79,6 +78,7 @@ def load_user(user_id):
 
 # Evaluate UPLOAD_FOLDER relative to the current Flask App's execution directory
 app.config['UPLOAD_FOLDER'] = os.path.join(APP_ROOT, UPLOAD_FOLDER)
+
 
 # -------------------------------Routing Functions-----------------------------------
 
@@ -292,6 +292,7 @@ def logout():
     logout_user()
     return redirect(url_for('list_questions'))
 
+
 @app.route('/users')
 def list_users():
     if session['username']:
@@ -326,15 +327,15 @@ def show_user_data():
     answers = data_manager.collect_qa(user_id=user[0], table='answer')
 
     datas = {
-            'id': user[0],
-            'username': user[1],
-            'email': user[2],
-            'reputation': user[4],
-            'count_questions': len(questions),
-            'count_answers': len(answers),
-            'questions': questions,
-            'answers': answers
-        }
+        'id': user[0],
+        'username': user[1],
+        'email': user[2],
+        'reputation': user[4],
+        'count_questions': len(questions),
+        'count_answers': len(answers),
+        'questions': questions,
+        'answers': answers
+    }
 
     return render_template('user.html', title='Users', form=form, datas=datas)
 
