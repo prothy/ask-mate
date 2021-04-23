@@ -1,49 +1,59 @@
-{#
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-</head>
-<body>
-
-Username:  {{ user.username }}
-Email: {{ user.email }}
-Count of asked questions: {{ user.count_answers }}
-Count of answers: {{ user.count_answers }}
-Reputation: {{ user.reputation }}<br>
-
-<table border="0" bgcolor="#000000">
-    <caption>Questions of this user</caption>
-    <tr bgcolor="#ffffff">
-        <th max-width='20%'>Id</th>
-        <th>Title</th>
-    </tr>
-    {% for question in datas.questions %}
-    <tr bgcolor="#ffffff">
-        <td max-width='20%'>{{ question[0] }}</td>
-        <td><a href="/question/{{ question[0] }}>">{{ question[1] }}</a></td>
-    </tr>
-</table><br>
-
-<table border="0" bgcolor="#000000">
-    <caption>Answers of this user</caption>
-    <tr bgcolor="#ffffff">
-        <th max-width='20%'>Id</th>
-        <th>Message</th>
-    </tr>
-    {% for answer in datas.answers %}
-        <tr bgcolor="#ffffff">
-            <td max-width='20%'>{{ answer[0] }}</td>
-            <td><a href="/question/{{ answer[3] }}">{{ answer[1] }}</a></td>
-        </tr>
-    {% endfor %}
-</table>
-
-</body>
-</html>#}
-
 {% extends 'base.html' %}
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='list_questions.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='search_results.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='user.css') }}">
+{% endblock %}
 {% block content %}
-    {{ user }}
+    <div class="user-data">
+        <h1>{{ data['username'] }}'s profile</h1>
+        <h5>E-mail</h5>
+        <p>{{ data['email'] }}</p>
+        <h5>Reputation</h5>
+        <p>{{ data['reputation'] }}</p>
+        <h5>Question count</h5>
+        <p>{{ data['count_questions'] }}</p>
+        <h5>Answer count</h5>
+        <p>{{ data['count_answers'] }}</p>
+        <h4>Contributions</h4>
+    </div>
+    {% for question in questions %}
+        <a href="/question/{{ question['id'] }}" class="question-block">
+            <span class="info-container">
+                <span>
+                    <h6>{{ question.vote_number }} votes</h6>
+                    <h6 style="font-weight: bold;">·</h6>
+                    <h6>{{ question.view_number }} views</h6>
+                    <h6 style="font-weight: bold;">·</h6>
+                    <h6>{{ question.submission_time }}</h6>
+                </span>
+            </span>
+            <span class="text-container">
+                <h3>{{ question.title }}</h3>
+{#                <p>{{ question.message }}</p>#}
+                {{ question.message | safe }}
+            </span>
+        </a>
+    {% endfor %}
+    {% for answer in answers %}
+        <a href="/question/{{ answer.question_id }}" class="question-block">
+            <span class="info-container">
+                {% for question in questions %}
+                    {% if question['id'] == answer.question_id %}
+                        <span>
+                            <h5>Answered in </h5>
+                            <h5>{{ question.title }}</h5>
+                            <h6 style="font-weight: bold;">·</h6>
+                            <h6>{{ answer.vote_number }} votes</h6>
+                            <h6 style="font-weight: bold;">·</h6>
+                            <h6>{{ answer.submission_time }}</h6>
+                        </span>
+                    {% endif %}
+                {% endfor %}
+            </span>
+            <span class="text-container">
+                {{ answer.message | safe }}
+            </span>
+        </a>
+    {% endfor %}
 {% endblock %}

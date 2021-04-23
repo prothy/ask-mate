@@ -1,0 +1,12 @@
+/*css for user page*/
+.user-data h1, h5, p {
+    margin: 0.4em 0.2em;
+}
+
+.user-data h1, h4, h5 {
+    margin: 0.6em 0.4rem;
+}
+
+.user-data p {
+    margin: 0.4em;
+}

@@ -31,8 +31,6 @@ login_manager.login_message_category = 'info'
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'], convert_unicode=True)
 db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
 
-print(engine)
-
 Base = automap_base()
 Base.query = db_session.query_property()
 
@@ -121,7 +119,7 @@ def add_answer(question_id):
     else:
         message = request.form.get('input_message')
         picture = request.form.get('input_image_url')
-        user_id = escape(session['id'])
+        user_id = data_manager.get_user_id(current_user.username)['id']
 
         message = message.replace("'", '"')
 
@@ -143,6 +141,7 @@ def add_question():
     else:
         title = request.form.get('input_title')
         message = request.form.get('input_message')
+        tags = request.form.get('tags')
         message = message.replace("'", '"')
         user_id = data_manager.get_user_id(current_user.username)['id']
 
@@ -324,6 +323,9 @@ def list_users():
 
 @app.route('/user')
 def current_user_data():
+    if not current_user.username:
+        return redirect(url_for('login'))
+
     user = current_user.username
 
     user_id = data_manager.get_user_id(user)['id']
@@ -342,19 +344,22 @@ def show_user_data(user_id):
     # answers = data_manager.collect_qa(user_id=user[0], table='answer')
 
     questions = data_manager.get_questions_for_user(user_id)
+    answers = data_manager.get_answers_for_user(user_id)
 
-    datas = {
-        'id': user[0],
-        'username': user[1],
-        'email': user[2],
-        'reputation': user[4],
+    print(questions)
+
+    data = {
+        'id': user_id,
+        'username': user['username'],
+        'email': user['email'],
+        'reputation': user['reputation'],
         'count_questions': len(questions),
         'count_answers': len(answers),
         'questions': questions,
         'answers': answers
     }
 
-    return render_template('user.html', user=user['username'], questions=questions)#title='Users', form=form, datas=datas)
+    return render_template('user.html', data=data, questions=data['questions'], answers=data['answers'])#title='Users', form=form, datas=datas)
 
 
 if __name__ == '__main__':

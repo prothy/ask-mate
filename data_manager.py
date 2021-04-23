@@ -17,12 +17,12 @@ def sort_questions(cursor: RealDictCursor, order_by: str, order_direction: str, 
     query = f"""
         SELECT *
         FROM (
-            SELECT q.id, submission_time, view_number, vote_number, title, message, image, array_agg(name) tags, username
+            SELECT q.id, submission_time, view_number, vote_number, title, message, image, array_agg(name) tags, u.id user_id, username
             FROM question q
             INNER JOIN question_tag qt ON q.id = qt.question_id
             INNER JOIN tag t ON t.id = qt.tag_id
             INNER JOIN users u on q.user_id = u.id
-            GROUP BY q.id, username
+            GROUP BY q.id, u.id, username
             ORDER BY {order_by} {order_direction}
         ) tab
         WHERE NOT tags && %s
@@ -45,9 +45,15 @@ def get_tags(cursor: RealDictCursor):
 def get_answers_for_question(cursor: RealDictCursor, question_id):
     """Get all the answers for the selected question"""
     query = f"""
-        SELECT *
+        SELECT answer.id, answer.user_id, answer.submission_time, answer.vote_number, answer.message,
+            CASE WHEN question.accepted = answer.id THEN question.accepted
+            ELSE NULL
+            END AS is_accepted
         FROM answer
+        INNER JOIN users ON answer.user_id = users.id
+        INNER JOIN question ON answer.question_id = question.id
         WHERE question_id = {question_id}
+        ORDER BY is_accepted NULLS LAST, answer.vote_number 
         """
     cursor.execute(query)
     return cursor.fetchall()
@@ -97,8 +103,8 @@ def update_view_count(cursor: RealDictCursor, question_id):
 def add_answer(cursor: RealDictCursor, values):
     submission_time = datetime.datetime.now().isoformat(' ', 'seconds')
     query = f"""
-        INSERT INTO answer(submission_time, vote_number, question_id, message, image)
-        VALUES ('{values['user_id']}', '{submission_time}', 0, {values['question_id']}, '{values['message']}', '{values['image']}')
+        INSERT INTO answer(user_id, submission_time, vote_number, question_id, message)
+        VALUES ('{values['user_id']}', '{submission_time}', 0, {values['question_id']}, '{values['message']}')
     """
     cursor.execute(query)
 
@@ -280,6 +286,17 @@ def get_questions_for_user(cursor: RealDictCursor, user_id):
     query = f"""
     SELECT *
     FROM question
+    WHERE user_id = {user_id}"""
+
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def get_answers_for_user(cursor: RealDictCursor, user_id):
+    query = f"""
+    SELECT *
+    FROM answer
     WHERE user_id = {user_id}"""
 
     cursor.execute(query)
