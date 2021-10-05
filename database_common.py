@@ -10,7 +10,7 @@ def get_connection_string():
     host = os.environ.get('PSQL_HOST')
     database_name = os.environ.get('PSQL_DB_NAME')
 
-    heroku_db_url = os.environ.get('DATABASE_URL')
+    heroku_db_url = os.environ.get('DATABASE_URL').replace("://", "ql://", 1)
 
     env_variables_defined = user_name and password and host and database_name
     if heroku_db_url:
