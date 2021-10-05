@@ -10,9 +10,12 @@ def get_connection_string():
     host = os.environ.get('PSQL_HOST')
     database_name = os.environ.get('PSQL_DB_NAME')
 
-    env_variables_defined = user_name and password and host and database_name
+    heroku_db_url = os.environ.get('DATABASE_URL')
 
-    if env_variables_defined:
+    env_variables_defined = user_name and password and host and database_name
+    if heroku_db_url:
+        return heroku_db_url
+    elif env_variables_defined:
         # This string describes all the info for psycopg2 to connect to the database:
         return 'postgresql://{user_name}:{password}@{host}/{database_name}'.format(
             user_name=user_name,
