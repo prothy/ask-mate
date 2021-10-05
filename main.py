@@ -13,6 +13,7 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 
 import data_manager
+import database_common
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = "static/user-upload/"
@@ -21,7 +22,7 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 # App initialization parameters
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '406d389c74e700a2a35307d872bb618e'
-app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{os.environ.get("PSQL_USER_NAME")}:{os.environ.get("PSQL_PASSWORD")}@{os.environ.get("PSQL_HOST")}:5432/{os.environ.get("PSQL_DB_NAME")}'
+app.config['SQLALCHEMY_DATABASE_URI'] = database_common.get_connection_string()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
